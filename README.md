@@ -65,7 +65,7 @@ Baseline model:
 
 Main model:
 
-- Gradient boosting classifier.
+- Sigmoid-calibrated gradient boosting classifier.
 - Handles non-linear relationships and interactions across loan term, amount, history, arrears, and affordability-like features.
 
 Validation:
@@ -73,21 +73,24 @@ Validation:
 - ROC AUC and Gini for discriminatory power.
 - KS statistic for rank separation.
 - Average precision for bad-account retrieval.
-- Brier score and calibration plot for probability quality.
+- Brier score, calibration intercept/slope, expected calibration error, and calibration plot.
 - Cost-sensitive threshold where false negatives, bad borrowers approved, cost more than false positives.
 - Gains table by risk decile for risk policy and portfolio monitoring.
 - Permutation importance for model explainability.
+- Five-fold out-of-fold model selection on the development sample.
+- Locked 20% test sample used only after the champion and threshold are frozen.
+- Bootstrap 95% confidence intervals to show sampling uncertainty.
 
 ## Latest Reproducible Results
 
-The checked pipeline was run on the OpenML/UCI dataset with a 60/20/20 stratified train/validation/test split.
+The checked pipeline was run on the OpenML/UCI dataset with an 80/20 development/test split. Model and cutoff selection use five-fold out-of-fold predictions within the development sample; the test sample remains locked until selection is complete.
 
-| Model | ROC AUC | Gini | KS | Approval Rate | Approved Bad Rate | Business Cost |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Logistic baseline | 0.790 | 0.580 | 0.488 | 35.5% | 9.9% | 111 |
-| Gradient boosting main model | 0.769 | 0.539 | 0.429 | 33.0% | 4.5% | 92 |
+| Model | OOF AUC | OOF Cost / App | Locked-test AUC | Test Brier | Test Cost / App |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Logistic baseline | 0.770 | 0.524 | 0.804 | 0.155 | 0.575 |
+| Calibrated gradient boosting | **0.789** | **0.499** | 0.793 | 0.160 | 0.580 |
 
-The baseline ranks slightly better by AUC, while the main model is selected as the preferred operating model for this demo because it produces lower cost and a lower bad rate among approved accounts under the stated cutoff policy. This is the trade-off a credit risk analyst would document before recommending a policy threshold.
+Calibrated gradient boosting is selected before test evaluation because it has stronger out-of-fold AUC and lower out-of-fold cost. On the locked test sample its AUC is 0.793 (95% bootstrap CI 0.718-0.860) and its cost per application is 0.580 (95% CI 0.445-0.735). The logistic model happens to score slightly better on the test sample, but the champion is not changed after observing test results. This is a deliberate model-risk control rather than a post-hoc choice of the most favourable number.
 
 ## Quick Start
 
@@ -111,6 +114,9 @@ The main command writes:
 - `reports/gains_table.csv`
 - `reports/permutation_importance.csv`
 - `reports/baseline_logistic_effects.csv`
+- `reports/model_comparison.csv`
+- `reports/threshold_strategy.csv`
+- `reports/bootstrap_intervals.json`
 - `reports/figures/*.png`
 - `models/credit_risk_model.joblib`
 - `data/processed/scored_test_applications.csv`
@@ -138,18 +144,20 @@ This project is designed to show:
 
 - Python ML workflow with clean package structure.
 - Credit risk concepts: PD, bad rate, approval rate, cutoff selection, score deciles, Gini, KS, calibration.
-- Model risk mindset: baseline/challenger comparison, validation split, interpretability, threshold assumptions, limitations.
+- Model risk mindset: out-of-fold baseline/challenger selection, locked test policy, calibration, bootstrap uncertainty, interpretability, threshold assumptions, and limitations.
 - SQL capability through schema design, monitoring views, and reusable analysis queries.
 - Public GitHub readiness: no private data, reproducible commands, tests, and clear artifacts.
 
 ## Resume Bullets
 
-- Built an end-to-end credit risk analytics project in Python, estimating applicant probability of default with logistic regression and gradient boosting models, validating AUC/Gini, KS, calibration, and decile bad-rate lift.
+- Built an end-to-end credit risk analytics project in Python, selecting a calibrated gradient-boosting champion using five-fold out-of-fold validation and evaluating it once on a locked test set (AUC 0.793; 95% bootstrap CI 0.718-0.860).
 - Designed PostgreSQL-ready credit risk tables and monitoring views for scored applications, approval rate tracking, and model validation reporting.
 - Implemented reproducible data ingestion, feature preprocessing, cost-sensitive thresholding, model explainability, automated tests, and public GitHub documentation for banking/FinTech risk analyst roles.
 
 ## Next Steps
 
+- Add an Australian macroeconomic overlay and monthly account-performance portfolio.
+- Add vintage, roll-rate, expected-loss, and population-stability monitoring.
 - Add a Streamlit dashboard for score-band monitoring and manual underwriting review.
-- Add reject inference discussion and population stability index once a second time-period dataset is introduced.
+- Add reject inference and adverse-action reason-code analysis.
 - Replace the demo dataset with an Australian lender-approved internal dataset if used in a private workplace setting.

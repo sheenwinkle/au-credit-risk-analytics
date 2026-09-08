@@ -21,13 +21,14 @@ The target is `default_flag`:
 
 ## Validation Design
 
-The pipeline uses stratified train/validation/test splits:
+The pipeline uses a stratified development/test split:
 
-- Training set fits model parameters.
-- Validation set chooses the cost-sensitive threshold.
-- Test set reports final metrics.
+- Five-fold out-of-fold predictions on the 80% development sample compare candidate models and choose their operating cutoffs.
+- The selected model is refit on the complete development sample.
+- The locked 20% test sample is evaluated only after the champion and threshold are frozen.
+- Bootstrap resampling on the test sample quantifies uncertainty around key performance measures.
 
-This separation avoids selecting the operating cutoff on the same rows used for final performance reporting.
+The champion is not changed when another candidate happens to perform better on the locked test sample. This prevents post-hoc selection from turning the test sample into another validation sample.
 
 ## Key Metrics
 
@@ -36,13 +37,15 @@ This separation avoids selecting the operating cutoff on the same rows used for 
 - KS: separation between cumulative good and bad distributions.
 - Average precision: bad-account retrieval quality under class imbalance.
 - Brier score: probability calibration quality.
+- Calibration intercept/slope: systematic under- or over-prediction and probability spread.
+- Expected calibration error: weighted gap between predicted PD and observed bad rate.
 - Approval rate: share of applications below the decline threshold.
 - Approved bad rate: observed default rate among approved accounts.
 - Gains table: observed bad-rate concentration across score deciles.
 
 ## Threshold Policy
 
-The demo threshold assumes an approved bad account is five times as costly as a declined good account. That is a transparent placeholder for expected loss versus opportunity cost.
+The demo threshold assumes an approved bad account is five times as costly as a declined good account. The pipeline exports the full threshold sensitivity table, rather than presenting one cutoff as universally optimal. This remains a transparent placeholder for expected loss versus opportunity cost.
 
 A real lender would replace this with product-specific:
 

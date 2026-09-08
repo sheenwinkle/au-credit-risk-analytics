@@ -5,6 +5,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (
     average_precision_score,
     brier_score_loss,
@@ -59,6 +60,7 @@ def score_metrics(y_true: np.ndarray, y_score: np.ndarray, threshold: float) -> 
     approved_bad_rate = float(y_true[approval_mask].mean()) if approval_mask.any() else 0.0
     declined_bad_rate = float(y_true[pred_bad == 1].mean()) if (pred_bad == 1).any() else 0.0
 
+    calibration = calibration_diagnostics(y_true, y_score)
     return {
         "roc_auc": float(roc_auc_score(y_true, y_score)),
         "gini": float(2 * roc_auc_score(y_true, y_score) - 1),
@@ -75,7 +77,93 @@ def score_metrics(y_true: np.ndarray, y_score: np.ndarray, threshold: float) -> 
         "approved_bad_rate": approved_bad_rate,
         "declined_bad_rate": declined_bad_rate,
         "business_cost": business_cost(y_true, y_score, threshold),
+        "business_cost_per_application": business_cost(y_true, y_score, threshold) / len(y_true),
+        **calibration,
     }
+
+
+def calibration_diagnostics(y_true: np.ndarray, y_score: np.ndarray) -> dict[str, float]:
+    clipped = np.clip(y_score, 1e-6, 1 - 1e-6)
+    logits = np.log(clipped / (1 - clipped)).reshape(-1, 1)
+    calibrator = LogisticRegression(C=1e6, solver="lbfgs")
+    calibrator.fit(logits, y_true)
+
+    frame = pd.DataFrame({"actual": y_true, "score": y_score})
+    frame["bin"] = pd.qcut(frame["score"].rank(method="first"), 10, labels=False)
+    grouped = frame.groupby("bin", observed=True).agg(
+        applications=("actual", "size"),
+        observed_rate=("actual", "mean"),
+        mean_score=("score", "mean"),
+    )
+    ece = np.average(
+        np.abs(grouped["observed_rate"] - grouped["mean_score"]),
+        weights=grouped["applications"],
+    )
+    return {
+        "calibration_intercept": float(calibrator.intercept_[0]),
+        "calibration_slope": float(calibrator.coef_[0, 0]),
+        "expected_calibration_error": float(ece),
+    }
+
+
+def threshold_strategy_table(
+    y_true: np.ndarray,
+    y_score: np.ndarray,
+    thresholds: np.ndarray | None = None,
+) -> pd.DataFrame:
+    candidates = thresholds if thresholds is not None else np.linspace(0.05, 0.60, 56)
+    rows = []
+    for threshold in candidates:
+        metrics = score_metrics(y_true, y_score, float(threshold))
+        rows.append(
+            {
+                "threshold": threshold,
+                "approval_rate": metrics["approval_rate"],
+                "approved_bad_rate": metrics["approved_bad_rate"],
+                "false_negative": metrics["false_negative"],
+                "false_positive": metrics["false_positive"],
+                "business_cost_per_application": metrics["business_cost_per_application"],
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def bootstrap_metric_intervals(
+    y_true: np.ndarray,
+    y_score: np.ndarray,
+    threshold: float,
+    n_bootstrap: int = 1000,
+    seed: int = 42,
+) -> dict[str, dict[str, float]]:
+    rng = np.random.default_rng(seed)
+    metric_names = [
+        "roc_auc",
+        "gini",
+        "ks_statistic",
+        "brier_score",
+        "approval_rate",
+        "approved_bad_rate",
+        "business_cost_per_application",
+    ]
+    samples = {name: [] for name in metric_names}
+    for _ in range(n_bootstrap):
+        indexes = rng.integers(0, len(y_true), len(y_true))
+        sampled_y = y_true[indexes]
+        if np.unique(sampled_y).size < 2:
+            continue
+        metrics = score_metrics(sampled_y, y_score[indexes], threshold)
+        for name in metric_names:
+            samples[name].append(metrics[name])
+
+    intervals = {}
+    for name, values in samples.items():
+        lower, upper = np.quantile(values, [0.025, 0.975])
+        intervals[name] = {
+            "estimate": float(score_metrics(y_true, y_score, threshold)[name]),
+            "lower_95": float(lower),
+            "upper_95": float(upper),
+        }
+    return intervals
 
 
 def gains_table(y_true: np.ndarray, y_score: np.ndarray, bins: int = 10) -> pd.DataFrame:

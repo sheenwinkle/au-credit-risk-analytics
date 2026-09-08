@@ -2,27 +2,50 @@
   "artifacts": {
     "gains_table": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\gains_table.csv",
     "model": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\models\\credit_risk_model.joblib",
+    "model_comparison": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\model_comparison.csv",
     "permutation_importance": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\permutation_importance.csv",
     "scored_test_applications": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\data\\processed\\scored_test_applications.csv",
-    "sqlite_demo": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\data\\processed\\credit_risk_demo.sqlite"
+    "sqlite_demo": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\data\\processed\\credit_risk_demo.sqlite",
+    "threshold_strategy": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\threshold_strategy.csv"
   },
-  "baseline_logistic": {
-    "approval_rate": 0.355,
-    "approved_bad_rate": 0.09859154929577464,
-    "average_precision": 0.6217050843038479,
-    "brier_score": 0.18775861644482497,
-    "business_cost": 111.0,
-    "declined_bad_rate": 0.4108527131782946,
-    "false_negative": 7,
-    "false_positive": 76,
-    "gini": 0.5802380952380952,
-    "ks_statistic": 0.48809523809523814,
-    "log_loss": 0.5522288315136948,
-    "roc_auc": 0.7901190476190476,
-    "threshold": 0.26499999999999996,
-    "true_negative": 64,
-    "true_positive": 53
+  "champion_bootstrap_95_intervals": {
+    "approval_rate": {
+      "estimate": 0.36,
+      "lower_95": 0.294875,
+      "upper_95": 0.425
+    },
+    "approved_bad_rate": {
+      "estimate": 0.1111111111111111,
+      "lower_95": 0.04054054054054054,
+      "upper_95": 0.18842538190364275
+    },
+    "brier_score": {
+      "estimate": 0.1603074014058015,
+      "lower_95": 0.13562994576680998,
+      "upper_95": 0.1878321726599143
+    },
+    "business_cost_per_application": {
+      "estimate": 0.58,
+      "lower_95": 0.445,
+      "upper_95": 0.7351249999999999
+    },
+    "gini": {
+      "estimate": 0.5852380952380951,
+      "lower_95": 0.4362195409774323,
+      "upper_95": 0.7196657676361436
+    },
+    "ks_statistic": {
+      "estimate": 0.5071428571428571,
+      "lower_95": 0.38917718560074804,
+      "upper_95": 0.6430564839572193
+    },
+    "roc_auc": {
+      "estimate": 0.7926190476190476,
+      "lower_95": 0.7181097704887162,
+      "upper_95": 0.8598328838180719
+    }
   },
+  "champion_model": "calibrated_gradient_boosting",
   "dataset": {
     "bad_rate": 0.3,
     "columns": 21,
@@ -30,32 +53,113 @@
     "rows": 1000,
     "source": "OpenML credit-g data_id=31, sourced from UCI Statlog German Credit"
   },
-  "main_gradient_boosting": {
-    "approval_rate": 0.33,
-    "approved_bad_rate": 0.045454545454545456,
-    "average_precision": 0.5838927372682625,
-    "brier_score": 0.1779770220257454,
-    "business_cost": 92.0,
-    "declined_bad_rate": 0.4253731343283582,
-    "false_negative": 3,
-    "false_positive": 77,
-    "gini": 0.5385714285714285,
-    "ks_statistic": 0.4285714285714285,
-    "log_loss": 0.5208666560960027,
-    "roc_auc": 0.7692857142857142,
-    "threshold": 0.11499999999999999,
-    "true_negative": 63,
-    "true_positive": 57
+  "locked_test_results": {
+    "calibrated_gradient_boosting": {
+      "approval_rate": 0.36,
+      "approved_bad_rate": 0.1111111111111111,
+      "average_precision": 0.6565599765585016,
+      "brier_score": 0.1603074014058015,
+      "business_cost": 116.0,
+      "business_cost_per_application": 0.58,
+      "calibration_intercept": 0.08571646500306121,
+      "calibration_slope": 1.2481450620927246,
+      "declined_bad_rate": 0.40625,
+      "expected_calibration_error": 0.07384938670182695,
+      "false_negative": 8,
+      "false_positive": 76,
+      "gini": 0.5852380952380951,
+      "ks_statistic": 0.5071428571428571,
+      "log_loss": 0.4901255932051012,
+      "roc_auc": 0.7926190476190476,
+      "threshold": 0.20499999999999996,
+      "true_negative": 64,
+      "true_positive": 52
+    },
+    "logistic_regression": {
+      "approval_rate": 0.335,
+      "approved_bad_rate": 0.1044776119402985,
+      "average_precision": 0.6351476785714039,
+      "brier_score": 0.15497100880543452,
+      "business_cost": 115.0,
+      "business_cost_per_application": 0.575,
+      "calibration_intercept": -0.1597982483781977,
+      "calibration_slope": 0.8640057529909172,
+      "declined_bad_rate": 0.39849624060150374,
+      "expected_calibration_error": 0.08308262943592261,
+      "false_negative": 7,
+      "false_positive": 80,
+      "gini": 0.6080952380952382,
+      "ks_statistic": 0.5666666666666667,
+      "log_loss": 0.48603789752089005,
+      "roc_auc": 0.8040476190476191,
+      "threshold": 0.12499999999999999,
+      "true_negative": 60,
+      "true_positive": 53
+    }
   },
-  "run_timestamp_utc": "2026-09-08T13:49:40.854169+00:00",
-  "split": {
-    "test_rows": 200,
-    "train_rows": 600,
-    "validation_rows": 200
+  "model_selection": {
+    "calibrated_gradient_boosting": {
+      "oof_metrics": {
+        "approval_rate": 0.36625,
+        "approved_bad_rate": 0.07508532423208192,
+        "average_precision": 0.5982729861913922,
+        "brier_score": 0.16640953999368896,
+        "business_cost": 399.0,
+        "business_cost_per_application": 0.49875,
+        "calibration_intercept": 0.23904784498579862,
+        "calibration_slope": 1.3733008580989179,
+        "declined_bad_rate": 0.42998027613412226,
+        "expected_calibration_error": 0.03978181791542573,
+        "false_negative": 22,
+        "false_positive": 289,
+        "gini": 0.578973214285714,
+        "ks_statistic": 0.44166666666666665,
+        "log_loss": 0.5017386543649199,
+        "roc_auc": 0.789486607142857,
+        "threshold": 0.20499999999999996,
+        "true_negative": 271,
+        "true_positive": 218
+      },
+      "threshold_result": {
+        "min_approval_rate": 0.25,
+        "threshold": 0.20499999999999996,
+        "validation_cost": 399.0
+      }
+    },
+    "logistic_regression": {
+      "oof_metrics": {
+        "approval_rate": 0.34125,
+        "approved_bad_rate": 0.08058608058608059,
+        "average_precision": 0.5866202336506847,
+        "brier_score": 0.17364928249225337,
+        "business_cost": 419.0,
+        "business_cost_per_application": 0.52375,
+        "calibration_intercept": -0.1926109785931287,
+        "calibration_slope": 0.710419213139299,
+        "declined_bad_rate": 0.41366223908918404,
+        "expected_calibration_error": 0.05389669364014404,
+        "false_negative": 22,
+        "false_positive": 309,
+        "gini": 0.5393898809523807,
+        "ks_statistic": 0.405952380952381,
+        "log_loss": 0.520785362448696,
+        "roc_auc": 0.7696949404761904,
+        "threshold": 0.12499999999999999,
+        "true_negative": 251,
+        "true_positive": 218
+      },
+      "threshold_result": {
+        "min_approval_rate": 0.25,
+        "threshold": 0.12499999999999999,
+        "validation_cost": 419.0
+      }
+    }
   },
-  "validation_threshold": {
-    "min_approval_rate": 0.25,
-    "threshold": 0.11499999999999999,
-    "validation_cost": 86.0
+  "run_timestamp_utc": "2026-09-08T22:30:15.674972+00:00",
+  "validation_design": {
+    "development_rows": 800,
+    "selection_method": "5-fold out-of-fold predictions on development set",
+    "test_policy": "locked until champion and threshold were selected",
+    "test_rows": 200
   }
 }
