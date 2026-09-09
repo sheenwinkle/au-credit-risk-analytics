@@ -30,6 +30,7 @@ postgres = [
 [project.scripts]
 credit-risk-train = "credit_risk_au.train:main"
 credit-risk-portfolio = "credit_risk_au.portfolio:main"
+credit-risk-analyse = "credit_risk_au.analytics:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

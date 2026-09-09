@@ -101,6 +101,25 @@ The checked pipeline was run on the OpenML/UCI dataset with an 80/20 development
 
 Calibrated gradient boosting is selected before test evaluation because it has stronger out-of-fold AUC and lower out-of-fold cost. On the locked test sample its AUC is 0.793 (95% bootstrap CI 0.718-0.860) and its cost per application is 0.580 (95% CI 0.445-0.735). The logistic model happens to score slightly better on the test sample, but the champion is not changed after observing test results. This is a deliberate model-risk control rather than a post-hoc choice of the most favourable number.
 
+## Portfolio Monitoring Results
+
+The latest deterministic portfolio run produces:
+
+| Measure | Result |
+| --- | ---: |
+| Accounts | 3,000 |
+| Account-month records | 105,520 |
+| Latest exposure | AUD 7.49m |
+| 30+ DPD balance rate | 2.87% |
+| 90+ DPD balance rate | 1.72% |
+| Simulated defaults | 231 |
+| Base expected loss | AUD 232.8k |
+| Severe expected loss | AUD 520.7k |
+| Severe vs base increase | 123.6% |
+| Population Stability Index | 2.404 |
+
+The high PSI is treated as a monitoring alert caused by macro-sensitive PD movement and portfolio composition change, not as a positive model-performance result. See [`docs/portfolio_methodology.md`](docs/portfolio_methodology.md) for definitions and limitations.
+
 ## Quick Start
 
 ```bash
@@ -109,6 +128,7 @@ python -m venv .venv
 pip install -e ".[dev]"
 python -m credit_risk_au.train --source openml
 python -m credit_risk_au.portfolio --accounts 3000
+python -m credit_risk_au.analytics
 pytest
 ```
 
@@ -139,6 +159,8 @@ The portfolio command writes:
 - `data/processed/portfolio_monthly_performance.csv`
 - `reports/portfolio_data_profile.json`
 
+The analytics command writes portfolio risk outputs for monthly arrears, vintage curves, roll rates, population stability, and stress scenarios to `reports/portfolio/`, with a local SQLite review database and four presentation-ready figures.
+
 ## Example Local SQLite Check
 
 The training run builds a small local database mirror for reviewers who do not have PostgreSQL running.
@@ -161,6 +183,7 @@ This project is designed to show:
 
 - Python ML workflow with clean package structure.
 - Credit risk concepts: PD, bad rate, approval rate, cutoff selection, score deciles, Gini, KS, calibration.
+- Portfolio risk concepts: 30+/90+ DPD, vintage curves, roll and cure rates, write-offs, recoveries, PSI, PD/LGD/EAD expected loss, and scenario stress testing.
 - Model risk mindset: out-of-fold baseline/challenger selection, locked test policy, calibration, bootstrap uncertainty, interpretability, threshold assumptions, and limitations.
 - SQL capability through schema design, monitoring views, and reusable analysis queries.
 - Public GitHub readiness: no private data, reproducible commands, tests, and clear artifacts.
@@ -169,6 +192,7 @@ This project is designed to show:
 
 - Built an end-to-end credit risk analytics project in Python, selecting a calibrated gradient-boosting champion using five-fold out-of-fold validation and evaluating it once on a locked test set (AUC 0.793; 95% bootstrap CI 0.718-0.860).
 - Designed PostgreSQL-ready credit risk tables and monitoring views for scored applications, approval rate tracking, and model validation reporting.
+- Built a 105,520-row monthly account-performance mart and PostgreSQL monitoring layer covering vintage defaults, delinquency migration, portfolio arrears, and expected loss under three stress scenarios.
 - Implemented reproducible data ingestion, feature preprocessing, cost-sensitive thresholding, model explainability, automated tests, and public GitHub documentation for banking/FinTech risk analyst roles.
 
 ## Next Steps

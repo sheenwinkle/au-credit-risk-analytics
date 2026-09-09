@@ -1,0 +1,24 @@
+{
+  "latest_reporting_month": "2026-08-31",
+  "accounts": 3000,
+  "monthly_records": 105520,
+  "latest_exposure": 7489075.53,
+  "latest_30_plus_rate": 0.02865867344243489,
+  "latest_90_plus_rate": 0.0172268512292598,
+  "total_defaults": 231,
+  "population_stability_index": 2.4035008468730803,
+  "scenario_expected_loss": {
+    "base": 232814.0303924956,
+    "moderate": 346053.56816169264,
+    "severe": 520680.06152832747
+  },
+  "severe_vs_base_el_increase": 1.2364634152440273,
+  "outputs": {
+    "monthly_summary": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\portfolio\\monthly_summary.csv",
+    "vintage_analysis": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\portfolio\\vintage_analysis.csv",
+    "roll_rates": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\portfolio\\roll_rates.csv",
+    "population_stability": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\portfolio\\population_stability.csv",
+    "stress_scenarios": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\portfolio\\stress_scenarios.csv"
+  },
+  "sqlite_demo": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\data\\processed\\portfolio_risk_demo.sqlite"
+}
