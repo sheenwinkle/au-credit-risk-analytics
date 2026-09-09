@@ -1,8 +1,12 @@
 {
   "artifacts": {
+    "fairness_audit": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\fairness_audit.csv",
     "gains_table": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\gains_table.csv",
+    "governance_report": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\model_governance_report.md",
+    "local_reason_codes": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\local_reason_codes.csv",
     "model": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\models\\credit_risk_model.joblib",
     "model_comparison": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\model_comparison.csv",
+    "model_registry": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\model_registry.json",
     "permutation_importance": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\permutation_importance.csv",
     "scored_test_applications": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\data\\processed\\scored_test_applications.csv",
     "sqlite_demo": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\data\\processed\\credit_risk_demo.sqlite",
@@ -155,7 +159,7 @@
       }
     }
   },
-  "run_timestamp_utc": "2026-09-08T22:30:15.674972+00:00",
+  "run_timestamp_utc": "2026-09-09T07:58:32.191592+00:00",
   "validation_design": {
     "development_rows": 800,
     "selection_method": "5-fold out-of-fold predictions on development set",

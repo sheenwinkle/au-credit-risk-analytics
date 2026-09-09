@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "au-credit-risk-analytics"
-version = "0.1.0"
+version = "0.5.0"
 description = "Credit risk modelling and analytics portfolio project for Australian banking and FinTech risk roles."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -13,9 +13,11 @@ dependencies = [
     "matplotlib>=3.8",
     "numpy>=1.26",
     "pandas>=2.1",
+    "plotly>=5.24",
     "scikit-learn>=1.4",
     "seaborn>=0.13",
     "sqlalchemy>=2.0",
+    "streamlit>=1.39",
 ]
 
 [project.optional-dependencies]

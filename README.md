@@ -129,6 +129,7 @@ pip install -e ".[dev]"
 python -m credit_risk_au.train --source openml
 python -m credit_risk_au.portfolio --accounts 3000
 python -m credit_risk_au.analytics
+streamlit run app.py
 pytest
 ```
 
@@ -147,6 +148,10 @@ The main command writes:
 - `reports/model_comparison.csv`
 - `reports/threshold_strategy.csv`
 - `reports/bootstrap_intervals.json`
+- `reports/local_reason_codes.csv`
+- `reports/fairness_audit.csv`
+- `reports/model_registry.json`
+- `reports/model_governance_report.md`
 - `reports/figures/*.png`
 - `models/credit_risk_model.joblib`
 - `data/processed/scored_test_applications.csv`
@@ -160,6 +165,8 @@ The portfolio command writes:
 - `reports/portfolio_data_profile.json`
 
 The analytics command writes portfolio risk outputs for monthly arrears, vintage curves, roll rates, population stability, and stress scenarios to `reports/portfolio/`, with a local SQLite review database and four presentation-ready figures.
+
+The Streamlit control room presents executive portfolio KPIs, vintage and roll-rate analysis, model validation, stress scenarios, segment diagnostics, and individual PD reason codes from the checked report artifacts.
 
 ## Example Local SQLite Check
 
@@ -185,6 +192,7 @@ This project is designed to show:
 - Credit risk concepts: PD, bad rate, approval rate, cutoff selection, score deciles, Gini, KS, calibration.
 - Portfolio risk concepts: 30+/90+ DPD, vintage curves, roll and cure rates, write-offs, recoveries, PSI, PD/LGD/EAD expected loss, and scenario stress testing.
 - Model risk mindset: out-of-fold baseline/challenger selection, locked test policy, calibration, bootstrap uncertainty, interpretability, threshold assumptions, and limitations.
+- Governance evidence: versioned model registry, artifact hash, local reason codes, segment fairness diagnostics, monitoring triggers, and explicit use restrictions.
 - SQL capability through schema design, monitoring views, and reusable analysis queries.
 - Public GitHub readiness: no private data, reproducible commands, tests, and clear artifacts.
 

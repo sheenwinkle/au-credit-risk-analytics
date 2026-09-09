@@ -28,6 +28,12 @@ from credit_risk_au.evaluate import (
 )
 from credit_risk_au.explain import logistic_feature_effects, permutation_importance_table
 from credit_risk_au.features import split_features_target
+from credit_risk_au.governance import (
+    fairness_audit,
+    local_reason_codes,
+    write_governance_report,
+    write_model_registry,
+)
 from credit_risk_au.modeling import (
     build_baseline_model,
     build_main_model,
@@ -139,6 +145,10 @@ def train_pipeline(source: str = "openml") -> dict:
     intervals_path = REPORTS_DIR / "bootstrap_intervals.json"
     model_path = MODELS_DIR / "credit_risk_model.joblib"
     db_path = PROCESSED_DIR / "credit_risk_demo.sqlite"
+    reason_codes_path = REPORTS_DIR / "local_reason_codes.csv"
+    fairness_path = REPORTS_DIR / "fairness_audit.csv"
+    registry_path = REPORTS_DIR / "model_registry.json"
+    governance_path = REPORTS_DIR / "model_governance_report.md"
 
     scored.to_csv(scored_path, index=False)
     gains.to_csv(gains_path, index=False)
@@ -148,6 +158,23 @@ def train_pipeline(source: str = "openml") -> dict:
     threshold_strategy.to_csv(threshold_path, index=False)
     save_json(confidence_intervals, intervals_path)
     joblib.dump(champion_model, model_path)
+    reason_codes = local_reason_codes(champion_model, x_test)
+    fairness = fairness_audit(
+        x_test,
+        y_test,
+        champion_test_pd,
+        champion_threshold,
+    )
+    reason_codes.to_csv(reason_codes_path, index=False)
+    fairness.to_csv(fairness_path, index=False)
+    registry = write_model_registry(
+        registry_path,
+        model_path,
+        test_results[champion_name],
+        champion_name,
+        champion_threshold,
+    )
+    write_governance_report(governance_path, registry, fairness, confidence_intervals)
     write_sqlite_demo(df, scored, gains, db_path)
 
     payload = {
@@ -183,6 +210,10 @@ def train_pipeline(source: str = "openml") -> dict:
             "sqlite_demo": str(db_path),
             "model_comparison": str(comparison_path),
             "threshold_strategy": str(threshold_path),
+            "local_reason_codes": str(reason_codes_path),
+            "fairness_audit": str(fairness_path),
+            "model_registry": str(registry_path),
+            "governance_report": str(governance_path),
         },
     }
     save_json(payload, REPORTS_DIR / "metrics.json")

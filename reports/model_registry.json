@@ -1,0 +1,35 @@
+{
+  "model_version": "credit-risk-pd-0.5.0",
+  "model_name": "calibrated_gradient_boosting",
+  "stage": "portfolio_demonstration",
+  "approval_status": "not_for_production",
+  "artifact_sha256": "f9909104cf1f0aac2130fe158d5a600aa18fb9455828610e35fbd16779b20f94",
+  "decision_threshold": 0.20499999999999996,
+  "locked_test_metrics": {
+    "roc_auc": 0.7926190476190476,
+    "gini": 0.5852380952380951,
+    "average_precision": 0.6565599765585016,
+    "brier_score": 0.1603074014058015,
+    "log_loss": 0.4901255932051012,
+    "ks_statistic": 0.5071428571428571,
+    "threshold": 0.20499999999999996,
+    "true_negative": 64,
+    "false_positive": 76,
+    "false_negative": 8,
+    "true_positive": 52,
+    "approval_rate": 0.36,
+    "approved_bad_rate": 0.1111111111111111,
+    "declined_bad_rate": 0.40625,
+    "business_cost": 116.0,
+    "business_cost_per_application": 0.58,
+    "calibration_intercept": 0.08571646500306121,
+    "calibration_slope": 1.2481450620927246,
+    "expected_calibration_error": 0.07384938670182695
+  },
+  "required_reviews": [
+    "independent model validation",
+    "data owner approval",
+    "fair lending and responsible lending review",
+    "production monitoring sign-off"
+  ]
+}
