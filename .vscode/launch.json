@@ -1,0 +1,57 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Dashboard: Streamlit",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "streamlit",
+      "args": [
+        "run",
+        "app.py",
+        "--server.headless",
+        "true",
+        "--server.port",
+        "8504"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "Model: train offline sample",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "credit_risk_au.train",
+      "args": [
+        "--source",
+        "sample"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "Portfolio: build data",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "credit_risk_au.portfolio",
+      "args": [
+        "--accounts",
+        "3000"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "Portfolio: run analytics",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "credit_risk_au.analytics",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    }
+  ]
+}

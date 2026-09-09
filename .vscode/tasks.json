@@ -1,0 +1,133 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Environment: install project",
+      "type": "process",
+      "command": "${command:python.interpreterPath}",
+      "args": [
+        "-m",
+        "pip",
+        "install",
+        "-e",
+        ".[dev]"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Quality: lint",
+      "type": "process",
+      "command": "${command:python.interpreterPath}",
+      "args": [
+        "-m",
+        "ruff",
+        "check",
+        "."
+      ],
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Quality: test",
+      "type": "process",
+      "command": "${command:python.interpreterPath}",
+      "args": [
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Quality: run all checks",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Quality: lint",
+        "Quality: test"
+      ],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Model: train offline sample",
+      "type": "process",
+      "command": "${command:python.interpreterPath}",
+      "args": [
+        "-m",
+        "credit_risk_au.train",
+        "--source",
+        "sample"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Portfolio: build data",
+      "type": "process",
+      "command": "${command:python.interpreterPath}",
+      "args": [
+        "-m",
+        "credit_risk_au.portfolio",
+        "--accounts",
+        "3000"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Portfolio: run analytics",
+      "type": "process",
+      "command": "${command:python.interpreterPath}",
+      "args": [
+        "-m",
+        "credit_risk_au.analytics"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Pipeline: refresh demo artifacts",
+      "dependsOrder": "sequence",
+      "dependsOn": [
+        "Model: train offline sample",
+        "Portfolio: build data",
+        "Portfolio: run analytics"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Docker: deploy dashboard",
+      "type": "process",
+      "command": "docker",
+      "args": [
+        "compose",
+        "up",
+        "--build",
+        "--detach"
+      ],
+      "options": {
+        "env": {
+          "DASHBOARD_PORT": "8505"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Docker: stop dashboard",
+      "type": "process",
+      "command": "docker",
+      "args": [
+        "compose",
+        "down"
+      ],
+      "options": {
+        "env": {
+          "DASHBOARD_PORT": "8505"
+        }
+      },
+      "problemMatcher": []
+    }
+  ]
+}

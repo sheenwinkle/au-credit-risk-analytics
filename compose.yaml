@@ -1,0 +1,10 @@
+name: au-credit-risk-analytics
+
+services:
+  dashboard:
+    build:
+      context: .
+    image: au-credit-risk-analytics:local
+    ports:
+      - "${DASHBOARD_PORT:-8501}:8501"
+    restart: unless-stopped

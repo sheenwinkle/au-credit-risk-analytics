@@ -40,6 +40,7 @@ Latest generated portfolio profile:
 
 ```text
 .
+├── .vscode/                # Local tasks, debugger, tests, and extension recommendations
 ├── data/
 │   ├── raw/                 # Downloaded or generated raw data, gitignored
 │   ├── processed/           # Processed data, scores, local SQLite demo, gitignored
@@ -64,7 +65,8 @@ Latest generated portfolio profile:
 │   ├── explain.py
 │   ├── database.py
 │   └── train.py
-└── tests/
+├── tests/
+└── compose.yaml            # One-command local container deployment
 ```
 
 ## Method
@@ -135,6 +137,17 @@ streamlit run app.py
 pytest
 ```
 
+### VS Code Local Workspace
+
+Open the repository folder in VS Code and accept the recommended Python, Ruff, and Docker extensions. The checked-in workspace configuration selects `.venv`, enables pytest discovery, and provides these menu actions:
+
+- **Terminal > Run Task > Environment: install project** installs the editable development environment.
+- **Terminal > Run Task > Pipeline: refresh demo artifacts** runs offline model training, portfolio generation, and portfolio analytics in sequence.
+- **Run and Debug > Dashboard: Streamlit** starts the local control room with the debugger attached.
+- **Terminal > Run Task > Docker: deploy dashboard** builds and starts the container through Docker Compose.
+
+The VS Code native debugger uses port 8504 and the VS Code Docker task uses port 8505, allowing both modes to be tested without collision. Direct Streamlit and Docker Compose commands retain the standard port 8501 default.
+
 Offline/demo mode:
 
 ```bash
@@ -175,6 +188,13 @@ Docker dashboard:
 ```bash
 docker build -t au-credit-risk-analytics .
 docker run --rm -p 8501:8501 au-credit-risk-analytics
+```
+
+VS Code and Docker Compose deployment:
+
+```bash
+docker compose up --build --detach
+docker compose ps
 ```
 
 The image has been built and health-checked with Docker Desktop and is also built by CI on every change. See [`docs/docker_validation.md`](docs/docker_validation.md) for the verified runtime and a Windows custom-installation note.

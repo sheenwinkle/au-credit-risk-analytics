@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.0 - VS Code local workspace
+
+- Added checked-in VS Code settings, recommended extensions, launch configurations, and tasks.
+- Added a one-command Docker Compose deployment for the Streamlit control room.
+- Added CI validation for workspace JSON and the Compose deployment definition.
+
 ## 0.6.1 - Docker runtime verification
 
 - Built the Linux dashboard image with Docker Desktop 4.89.0 and engine 29.7.2.

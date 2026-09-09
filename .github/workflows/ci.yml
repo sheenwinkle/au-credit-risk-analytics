@@ -25,5 +25,12 @@ jobs:
         run: pytest -q
       - name: Exercise offline training pipeline
         run: python -m credit_risk_au.train --source sample
+      - name: Validate VS Code workspace
+        run: |
+          python -m json.tool .vscode/extensions.json > /dev/null
+          python -m json.tool .vscode/settings.json > /dev/null
+          python -m json.tool .vscode/launch.json > /dev/null
+          python -m json.tool .vscode/tasks.json > /dev/null
+          docker compose config --quiet
       - name: Build dashboard container
         run: docker build -t au-credit-risk-analytics:ci .
