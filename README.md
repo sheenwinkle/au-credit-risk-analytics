@@ -1,5 +1,7 @@
 # Australian Credit Risk Analytics
 
+[![quality](https://github.com/sheenwinkle/au-credit-risk-analytics/actions/workflows/ci.yml/badge.svg)](https://github.com/sheenwinkle/au-credit-risk-analytics/actions/workflows/ci.yml)
+
 Credit risk modelling and portfolio analytics project built for Australian banking, FinTech, risk analyst, credit risk, and model risk roles.
 
 The project estimates applicant probability of default, chooses a cost-sensitive credit decision threshold, validates rank ordering and calibration, produces a score-band monitoring table, and includes PostgreSQL-ready SQL assets for risk reporting.
@@ -168,6 +170,13 @@ The analytics command writes portfolio risk outputs for monthly arrears, vintage
 
 The Streamlit control room presents executive portfolio KPIs, vintage and roll-rate analysis, model validation, stress scenarios, segment diagnostics, and individual PD reason codes from the checked report artifacts.
 
+Docker dashboard:
+
+```bash
+docker build -t au-credit-risk-analytics .
+docker run --rm -p 8501:8501 au-credit-risk-analytics
+```
+
 ## Example Local SQLite Check
 
 The training run builds a small local database mirror for reviewers who do not have PostgreSQL running.
@@ -202,6 +211,8 @@ This project is designed to show:
 - Designed PostgreSQL-ready credit risk tables and monitoring views for scored applications, approval rate tracking, and model validation reporting.
 - Built a 105,520-row monthly account-performance mart and PostgreSQL monitoring layer covering vintage defaults, delinquency migration, portfolio arrears, and expected loss under three stress scenarios.
 - Implemented reproducible data ingestion, feature preprocessing, cost-sensitive thresholding, model explainability, automated tests, and public GitHub documentation for banking/FinTech risk analyst roles.
+
+The concise one-bullet version and defensible interview answers are in [`docs/interview_guide.md`](docs/interview_guide.md). The full project history is recorded in [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Next Steps
 
