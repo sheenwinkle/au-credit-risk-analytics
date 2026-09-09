@@ -25,6 +25,15 @@ Default data source: OpenML `credit-g` dataset, `data_id=31`, originally from UC
 
 The repo does not commit raw third-party data. Running the pipeline downloads the public data into `data/raw/`. If OpenML is unavailable, the code falls back to a deterministic synthetic credit application dataset so the project remains runnable in interviews or offline demos.
 
+The portfolio workflow separately downloads four public RBA/ABS macro series and joins them to a deterministic synthetic Australian account-performance panel. This expands the analytical data from 1,000 application rows to thousands of accounts and tens of thousands of monthly observations without presenting synthetic customer records as real lender data. See [`docs/data_sources.md`](docs/data_sources.md) for licensing and attribution.
+
+Latest generated portfolio profile:
+
+- 3,000 Australian-labelled synthetic retail credit accounts.
+- 105,520 account-month performance records across 60 reporting months.
+- 231 simulated defaults with balances, write-offs, recoveries, PD, LGD, EAD, and expected loss.
+- 318 months of official macro history available for scenario joins.
+
 ## Project Structure
 
 ```text
@@ -99,6 +108,7 @@ python -m venv .venv
 .venv\Scripts\activate
 pip install -e ".[dev]"
 python -m credit_risk_au.train --source openml
+python -m credit_risk_au.portfolio --accounts 3000
 pytest
 ```
 
@@ -121,6 +131,13 @@ The main command writes:
 - `models/credit_risk_model.joblib`
 - `data/processed/scored_test_applications.csv`
 - `data/processed/credit_risk_demo.sqlite`
+
+The portfolio command writes:
+
+- `data/processed/australian_macro_monthly.csv`
+- `data/processed/portfolio_accounts.csv`
+- `data/processed/portfolio_monthly_performance.csv`
+- `reports/portfolio_data_profile.json`
 
 ## Example Local SQLite Check
 

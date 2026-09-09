@@ -1,0 +1,53 @@
+{
+  "data_classification": "synthetic account data enriched with public macro series",
+  "accounts": 3000,
+  "monthly_records": 105520,
+  "reporting_months": 60,
+  "defaults": 231,
+  "products": {
+    "personal_loan": 1355,
+    "auto_loan": 1036,
+    "credit_card": 609
+  },
+  "macro": {
+    "source_type": "official_rba_abs",
+    "rows": 318,
+    "start_month": "2000-03-31",
+    "end_month": "2026-08-31",
+    "sources": [
+      {
+        "series": "cash_rate_pct",
+        "table": "F1.1",
+        "series_id": "FIRMMCRT",
+        "url": "https://www.rba.gov.au/statistics/tables/csv/f1.1-data.csv",
+        "attribution": "Source: Reserve Bank of Australia"
+      },
+      {
+        "series": "unemployment_rate_pct",
+        "table": "H5",
+        "series_id": "GLFSURSA",
+        "url": "https://www.rba.gov.au/statistics/tables/csv/h5-data.csv",
+        "attribution": "Source: Australian Bureau of Statistics"
+      },
+      {
+        "series": "inflation_year_ended_pct",
+        "table": "G1",
+        "series_id": "GCPIAGYP",
+        "url": "https://www.rba.gov.au/statistics/tables/csv/g1-data.csv",
+        "attribution": "Based on Australian Bureau of Statistics data"
+      },
+      {
+        "series": "personal_credit_growth_yoy_pct",
+        "table": "D1",
+        "series_id": "DGFACOP12",
+        "url": "https://www.rba.gov.au/statistics/tables/csv/d1-data.csv",
+        "attribution": "Source: Reserve Bank of Australia"
+      }
+    ],
+    "output_path": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\data\\processed\\australian_macro_monthly.csv"
+  },
+  "outputs": {
+    "accounts": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\data\\processed\\portfolio_accounts.csv",
+    "monthly_performance": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\data\\processed\\portfolio_monthly_performance.csv"
+  }
+}
