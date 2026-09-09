@@ -177,6 +177,8 @@ docker build -t au-credit-risk-analytics .
 docker run --rm -p 8501:8501 au-credit-risk-analytics
 ```
 
+The image has been built and health-checked with Docker Desktop and is also built by CI on every change. See [`docs/docker_validation.md`](docs/docker_validation.md) for the verified runtime and a Windows custom-installation note.
+
 ## Example Local SQLite Check
 
 The training run builds a small local database mirror for reviewers who do not have PostgreSQL running.

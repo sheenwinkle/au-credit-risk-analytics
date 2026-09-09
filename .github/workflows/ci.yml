@@ -25,4 +25,5 @@ jobs:
         run: pytest -q
       - name: Exercise offline training pipeline
         run: python -m credit_risk_au.train --source sample
-
+      - name: Build dashboard container
+        run: docker build -t au-credit-risk-analytics:ci .

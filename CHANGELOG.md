@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.1 - Docker runtime verification
+
+- Built the Linux dashboard image with Docker Desktop 4.89.0 and engine 29.7.2.
+- Verified container health and the rendered control room on the mapped host port.
+- Added a Docker image build to GitHub Actions so packaging is checked on every change.
+
 ## 0.6.0 - Engineering and public delivery
 
 - Added offline GitHub Actions quality checks, a Streamlit smoke test, Docker packaging, and complete interview-facing documentation.
@@ -27,4 +33,3 @@
 ## 0.1.0 - Modelling baseline
 
 - Added public credit data ingestion, cleaning, EDA, logistic and gradient-boosting models, core risk metrics, SQL assets, tests, and documentation.
-
