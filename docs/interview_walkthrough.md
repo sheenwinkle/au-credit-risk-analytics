@@ -1,10 +1,10 @@
 # Interview Walkthrough and Project Value
 
-This guide is written for live interviews, recruiter screens, and GitHub reviews. It explains the value of the project, the path to demonstrate it, and the boundaries that keep the story credible.
+This guide is written for live interviews, recruiter screens, and GitHub reviews. It explains the value of the project, the path to demonstrate it, and the boundaries that keep the story credible. For the APRA-style control map behind the project framing, see [`apra_style_framework.md`](apra_style_framework.md).
 
 ## 30-second Pitch
 
-I built an end-to-end Australian credit risk analytics project that connects application PD modelling, reject-inference sensitivity, challenger monitoring, portfolio monitoring, stress testing, and IFRS 9-style ECL provisioning. The project uses Python, SQL, Streamlit, Docker, and CI to show the workflow a bank or FinTech risk analyst would be expected to understand: model development, validation, score monitoring, approved-only bias, challenger alerts, vintage and roll-rate analysis, expected loss, provisioning, documentation, and governance controls. The latest run covers 3,000 synthetic Australian-labelled accounts and 105,520 account-month observations, with reproducible outputs and a dashboard that can be reviewed locally or from GitHub.
+I built an end-to-end Australian credit risk analytics project that connects application PD modelling, reject-inference sensitivity, challenger monitoring, portfolio monitoring, stress testing, and IFRS 9-style ECL provisioning. It is a public portfolio project, not a production or compliance system, but it is organised with APRA-style risk-management habits: clear scope, evidence, controls, thresholds, limitations, and escalation paths. The latest run covers 3,000 synthetic Australian-labelled accounts and 105,520 account-month observations, with reproducible Python, SQL, Streamlit, Docker, CI, and dashboard outputs.
 
 ## GitHub Live Demo Path
 
@@ -14,24 +14,28 @@ Use this order in a live screen share:
    - Show the business problem, project structure, latest results, and resume bullets.
    - Point out the quality badge to show CI is not decorative.
 
-2. Open `app.py` or launch the dashboard
+2. Open `docs/apra_style_framework.md`
+   - Show the boundary first: APRA-style framing, not APRA compliance.
+   - Show the control framework and evidence map.
+
+3. Open `app.py` or launch the dashboard
    - Local Docker path: `docker compose up --build --detach`
    - Local URL: `http://localhost:8505/` when using the VS Code Docker task in this workspace.
    - Walk through: Executive view -> Portfolio performance -> IFRS 9 provisioning -> Model validation -> Policy monitoring -> Governance.
 
-3. Open `reports/portfolio_summary.json`
+4. Open `reports/portfolio_summary.json`
    - Show the quantified portfolio outputs: exposure, arrears, stress loss, PSI, ECL provision, reject inference, and monitoring-alert summary.
 
-4. Open `src/credit_risk_au/analytics.py`
+5. Open `src/credit_risk_au/analytics.py`
    - Show that the portfolio metrics, roll rates, stress scenarios, and ECL staging are implemented as reusable Python functions rather than manually created slides.
 
-5. Open `sql/02_monitoring_views.sql`
+6. Open `sql/02_monitoring_views.sql`
    - Show PostgreSQL-ready reporting views for score monitoring, validation lift, reject inference, model alerts, arrears, vintage performance, roll rates, and IFRS 9-style provision summaries.
 
-6. Open `tests/`
+7. Open `tests/`
    - Show that modelling, governance, portfolio analytics, macro data, app loading, and ECL staging are covered by automated tests.
 
-7. Open `.github/workflows/ci.yml`
+8. Open `.github/workflows/ci.yml`
    - Show that GitHub Actions checks linting, tests, offline pipeline execution, VS Code workspace JSON, and Docker image build.
 
 ## Personal Contribution
@@ -82,6 +86,7 @@ This project supports applications for risk analyst, credit risk analyst, model 
 - Policy-monitoring literacy: approved-only bias, reject inference, PD parceling, hidden-label backtesting, challenger review alerts, and champion replacement discipline.
 - Practical engineering: package structure, tests, CI, Docker, VS Code workspace, SQL assets, reproducible commands, and public documentation.
 - Model-risk judgement: champion selection before locked-test evaluation, uncertainty intervals, governance notes, use restrictions, and honest limitations.
+- APRA-style framing: risk appetite demonstration, evidence mapping, monitoring thresholds, data-risk boundaries, and operational-repeatability controls without overstating compliance.
 - Business communication: dashboard, executive metrics, interview guide, and defensible resume bullets.
 
 ## A/B Claim Boundaries
@@ -91,6 +96,7 @@ Use this as a boundary between strong claims and overclaims.
 | A: defensible claim | B: avoid saying |
 | --- | --- |
 | I built a reproducible public credit-risk analytics project. | I built a production bank lending system. |
+| I used APRA-style structure to organise risk controls, evidence, thresholds, and limitations. | This project is APRA compliant. |
 | I used public credit data and synthetic Australian-labelled account performance data. | I used real Australian bank customer data. |
 | I demonstrated the workflow for PD modelling, monitoring, stress testing, and ECL-style provisioning. | I created a statutory IFRS 9 impairment model. |
 | I showed reject-inference sensitivity using approved-only, PD parceling, and hidden-label backtesting on public demo data. | I recovered true rejected-customer outcomes for a real lender. |
@@ -105,6 +111,10 @@ Use this as a boundary between strong claims and overclaims.
 ### "Why is the portfolio synthetic?"
 
 Public credit datasets rarely include monthly repayment behaviour, arrears migration, write-offs, recoveries, LGD, EAD, and account-level provisioning fields. I used synthetic account performance so the full portfolio workflow is reproducible and privacy-safe, then connected it to public RBA/ABS macro series to make the scenario layer Australian-relevant.
+
+### "Why use APRA-style language if this is not a compliance project?"
+
+I am targeting Australian risk roles, so I want the project to show the discipline of regulated risk work: scope, evidence, controls, thresholds, limitations, and escalation. I am careful not to claim APRA compliance. The value is that the analytical work is organised in a way a financial-institution reviewer would recognise.
 
 ### "Why not use only the best locked-test model?"
 
@@ -137,6 +147,7 @@ I would replace synthetic performance with approved internal account data, valid
 - The ECL staging logic is simplified and not an audited IFRS 9 model.
 - Stress scenarios use transparent multipliers, not official forecasts.
 - The dashboard is a demonstration control room, not an authenticated production application.
+- APRA-style control mapping is an interview framing device, not a prudential compliance attestation.
 - Fairness and reason-code outputs are analytical diagnostics, not legal adverse-action notices.
 - Reject inference uses public demo labels for backtesting; real rejected-applicant inference would need approved bureau/performance data and policy sign-off.
 - Challenger alerts identify review actions; they are not automatic champion-replacement rules.
@@ -144,13 +155,13 @@ I would replace synthetic performance with approved internal account data, valid
 
 ## Five-minute Interview Flow
 
-1. Problem: "I wanted to show the full risk workflow, not just a classifier."
-2. Data: "Public credit applications plus synthetic monthly account performance linked to public macro series."
-3. Model: "Baseline logistic regression and calibrated gradient boosting, selected through out-of-fold validation."
-4. Validation: "Locked-test AUC 0.793, bootstrap uncertainty, calibration, threshold cost, gains table."
-5. Portfolio: "105,520 account-months with arrears, vintage, roll rates, PSI, stress expected loss."
-6. Policy monitoring: "Approved-only bad rate is 11.1%; PD parceling estimates 30.8% through-the-door risk, close to the 30.0% hidden-label backtest."
-7. Challenger alerts: "Logistic regression beats the champion on locked-test AUC by 0.011, so I flag review without post-hoc replacement."
-8. Provisioning: "Stage 1/2/3 ECL-style provision, AUD 291.8k total provision, Stage 3 concentration visible."
-9. Engineering: "SQL views, Streamlit dashboard, Docker deployment, tests, CI, and versioned GitHub history."
-10. Boundary: "It is a public demonstration project, not a claim of production deployment or statutory compliance."
+1. Boundary: "This is a public portfolio project organised with APRA-style controls; it is not a compliance or production claim."
+2. Problem: "I wanted to show the full risk workflow, not just a classifier."
+3. Data: "Public credit applications plus synthetic monthly account performance linked to public macro series."
+4. Model: "Baseline logistic regression and calibrated gradient boosting, selected through out-of-fold validation."
+5. Validation: "Locked-test AUC 0.793, bootstrap uncertainty, calibration, threshold cost, gains table."
+6. Portfolio: "105,520 account-months with arrears, vintage, roll rates, PSI, stress expected loss."
+7. Policy monitoring: "Approved-only bad rate is 11.1%; PD parceling estimates 30.8% through-the-door risk, close to the 30.0% hidden-label backtest."
+8. Challenger alerts: "Logistic regression beats the champion on locked-test AUC by 0.011, so I flag review without post-hoc replacement."
+9. Provisioning: "Stage 1/2/3 ECL-style provision, AUD 291.8k total provision, Stage 3 concentration visible."
+10. Engineering: "SQL views, Streamlit dashboard, Docker deployment, tests, CI, and versioned GitHub history."

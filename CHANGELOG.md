@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.9.1 - APRA-style portfolio framing
+
+- Added an APRA-style demonstration boundary and control framework that maps the project to prudential risk-management habits without claiming compliance or production readiness.
+- Updated the README and interview walkthrough to lead with the portfolio boundary, evidence map, control language, and interview-safe APRA-style framing.
+
 ## 0.9.0 - Reject inference and challenger monitoring
 
 - Added reject-inference sensitivity analysis comparing approved-only monitoring, PD parceling, and hidden-label backtesting on the public demo sample.

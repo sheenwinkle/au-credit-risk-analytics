@@ -6,6 +6,8 @@ Credit risk modelling and portfolio analytics project built for Australian banki
 
 The project estimates applicant probability of default, chooses a cost-sensitive credit decision threshold, validates rank ordering and calibration, produces score-band monitoring, builds a monthly account-performance mart, adds IFRS 9-style expected-credit-loss provisioning analytics, and includes reject-inference and challenger-monitoring controls with PostgreSQL-ready reporting assets.
 
+The project is structured as an APRA-style public portfolio demonstrator: it uses prudential risk-management habits around scope, evidence, controls, thresholds, limitations, and escalation, without claiming APRA compliance, production readiness, or real lending suitability. See [`docs/apra_style_framework.md`](docs/apra_style_framework.md).
+
 ## Business Problem
 
 Australian lenders need to approve profitable borrowers while meeting responsible lending expectations and controlling arrears/default losses. This project frames a practical retail credit workflow:
@@ -259,6 +261,20 @@ This project is designed to show:
 - Governance evidence: versioned model registry, artifact hash, local reason codes, segment fairness diagnostics, monitoring triggers, and explicit use restrictions.
 - SQL capability through schema design, monitoring views, and reusable analysis queries.
 - Public GitHub readiness: no private data, reproducible commands, tests, and clear artifacts.
+- APRA-style project framing: clear demo boundary, control mapping, risk indicators, evidence map, and interview-safe language.
+
+## APRA-style Boundary
+
+This project does not claim to be an APRA-compliant system. It uses APRA-style risk-management structure for a public job-search portfolio:
+
+- Scope and permitted-use boundaries are explicit.
+- Public and synthetic data sources are documented.
+- Model selection avoids post-hoc locked-test replacement.
+- Monitoring alerts trigger review rather than automatic production action.
+- Operational repeatability is shown through tests, CI, Docker, and health checks.
+- Limitations are documented before interview claims are made.
+
+The full control map is in [`docs/apra_style_framework.md`](docs/apra_style_framework.md).
 
 ## Interview Walkthrough
 
@@ -271,6 +287,7 @@ Use [`docs/interview_walkthrough.md`](docs/interview_walkthrough.md) for a recru
 - Defensible A/B claim boundaries.
 - Responses to common critiques.
 - Project limitations.
+- APRA-style boundary language.
 
 ## Resume Bullets
 
