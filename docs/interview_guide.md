@@ -8,6 +8,8 @@ This project separates two related credit-risk decisions:
 2. Portfolio risk: monitor balances, arrears migration, defaults, recoveries, expected loss, stability, and macroeconomic stress after origination.
 3. Provisioning risk: translate PD, LGD, EAD, arrears, and deterioration signals into Stage 1/2/3 ECL-style provision monitoring.
 
+For a complete live-demo path, 30-second pitch, quantified outputs, A/B claim boundaries, common critique responses, and project limitations, see [`interview_walkthrough.md`](interview_walkthrough.md).
+
 ## Decisions Worth Discussing
 
 ### Why was the champion not changed after test evaluation?

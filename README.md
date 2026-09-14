@@ -245,6 +245,18 @@ This project is designed to show:
 - SQL capability through schema design, monitoring views, and reusable analysis queries.
 - Public GitHub readiness: no private data, reproducible commands, tests, and clear artifacts.
 
+## Interview Walkthrough
+
+Use [`docs/interview_walkthrough.md`](docs/interview_walkthrough.md) for a recruiter/interviewer-ready walkthrough covering:
+
+- 30-second pitch.
+- GitHub live demo path.
+- Personal contribution.
+- Quantified outputs.
+- Defensible A/B claim boundaries.
+- Responses to common critiques.
+- Project limitations.
+
 ## Resume Bullets
 
 - Built an end-to-end credit risk analytics project in Python, selecting a calibrated gradient-boosting champion using five-fold out-of-fold validation and evaluating it once on a locked test set (AUC 0.793; 95% bootstrap CI 0.718-0.860).
@@ -253,7 +265,7 @@ This project is designed to show:
 - Added IFRS 9-style ECL staging and provision analytics across 1,675 active accounts, estimating AUD 291.8k total provision and showing Stage 3 accounts contribute 21.5% of provision from 1.7% of exposure.
 - Implemented reproducible data ingestion, feature preprocessing, cost-sensitive thresholding, model explainability, automated tests, and public GitHub documentation for banking/FinTech risk analyst roles.
 
-The concise one-bullet version and defensible interview answers are in [`docs/interview_guide.md`](docs/interview_guide.md). The full project history is recorded in [`CHANGELOG.md`](CHANGELOG.md).
+The concise one-bullet version and defensible interview answers are in [`docs/interview_guide.md`](docs/interview_guide.md), with the full live-demo walkthrough in [`docs/interview_walkthrough.md`](docs/interview_walkthrough.md). The full project history is recorded in [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Next Steps
 

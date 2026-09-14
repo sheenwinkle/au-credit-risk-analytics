@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.1 - Interview walkthrough and project value
+
+- Added an interviewer-ready walkthrough covering the 30-second pitch, live GitHub demo path, personal contribution, quantified outputs, defensible claim boundaries, common critique responses, and project limitations.
+- Linked the walkthrough from the README and existing interview guide so reviewers can quickly find the project value narrative.
+
 ## 0.8.0 - IFRS 9 ECL provisioning analytics
 
 - Added IFRS 9-style Stage 1/2/3 account staging, provision, coverage-ratio, and monthly movement analytics.
