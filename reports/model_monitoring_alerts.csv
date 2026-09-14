@@ -1,0 +1,6 @@
+alert,model,severity,measure,delta_vs_champion,recommended_action
+challenger_locked_test_auc_above_champion,logistic_regression,watch,roc_auc,0.011428571428571566,Review in the next validation cycle; do not replace the champion based only on the locked test sample.
+challenger_locked_test_brier_below_champion,logistic_regression,watch,brier_score,-0.005336392600366974,Check calibration stability and sample sensitivity.
+challenger_locked_test_cost_below_champion,logistic_regression,watch,business_cost_per_application,-0.0050000000000000044,Re-run OOF validation before any champion replacement.
+oof_selection_not_confirmed_by_locked_test_auc,calibrated_gradient_boosting,review,roc_auc,0.011428571428571566,"Keep champion selection policy unchanged, document rank-order instability, and collect more validation evidence."
+champion_calibration_slope_outside_target,calibrated_gradient_boosting,review,calibration_slope,0.24814506209272458,Review calibration before production use.

@@ -18,6 +18,37 @@ SELECT
 FROM credit_risk.validation_gains
 ORDER BY risk_decile;
 
+CREATE OR REPLACE VIEW credit_risk.v_reject_inference_summary AS
+SELECT
+    risk_decile,
+    applications,
+    approved,
+    declined,
+    approval_rate,
+    avg_pd,
+    approved_observed_bad_rate,
+    pd_parcelled_declined_bad_rate,
+    hidden_declined_bad_rate,
+    expected_declined_bads,
+    hidden_declined_bads,
+    parceling_error_bads
+FROM credit_risk.reject_inference_by_decile
+ORDER BY risk_decile;
+
+CREATE OR REPLACE VIEW credit_risk.v_open_model_monitoring_alerts AS
+SELECT
+    alert,
+    model,
+    severity,
+    measure,
+    delta_vs_champion,
+    recommended_action,
+    created_at
+FROM credit_risk.model_monitoring_alerts
+ORDER BY
+    CASE severity WHEN 'review' THEN 1 ELSE 2 END,
+    ABS(delta_vs_champion) DESC;
+
 CREATE OR REPLACE VIEW credit_risk.v_monthly_portfolio_risk AS
 SELECT
     reporting_month,

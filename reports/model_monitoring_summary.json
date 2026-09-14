@@ -1,0 +1,7 @@
+{
+  "best_locked_test_auc_model": "logistic_regression",
+  "champion_model": "calibrated_gradient_boosting",
+  "highest_severity": "review",
+  "open_alerts": 5,
+  "review_required": true
+}

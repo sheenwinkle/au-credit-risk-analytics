@@ -7,6 +7,7 @@ This project separates two related credit-risk decisions:
 1. Application risk: estimate probability of default, compare a transparent baseline with a calibrated challenger, and set a cost-sensitive approval cutoff.
 2. Portfolio risk: monitor balances, arrears migration, defaults, recoveries, expected loss, stability, and macroeconomic stress after origination.
 3. Provisioning risk: translate PD, LGD, EAD, arrears, and deterioration signals into Stage 1/2/3 ECL-style provision monitoring.
+4. Policy and model monitoring risk: analyse reject-inference sensitivity and challenger alerts without post-hoc champion replacement.
 
 For a complete live-demo path, 30-second pitch, quantified outputs, A/B claim boundaries, common critique responses, and project limitations, see [`interview_walkthrough.md`](interview_walkthrough.md).
 
@@ -32,10 +33,20 @@ No. It is scenario sensitivity under disclosed PD multipliers and LGD uplifts. T
 
 No. It is an interview-ready analytical approximation. The point is to show the risk workflow: identify significant deterioration, separate Stage 1/2/3 accounts, calculate provision from PD/LGD/EAD, and explain coverage ratios by stage and segment. A production IFRS 9 model would require approved accounting policy, audited data lineage, macroeconomic scenario weights, overlays, validation, and governance sign-off.
 
+### What does the reject-inference result show?
+
+Approved accounts have an observed bad rate of 11.1%, while PD parceling estimates through-the-door bad rate at 30.8%. Because the public demo sample has labels for all applications, the hidden-label backtest shows the actual through-the-door bad rate is 30.0%. The interview point is not that rejected outcomes are normally observable; it is that approved-only monitoring can materially understate applicant risk.
+
+### Why not replace the champion with logistic regression?
+
+Logistic regression performs slightly better on the locked test sample, with AUC 0.804 versus 0.793 for the selected champion. The project flags this as a challenger review alert, but does not replace the champion after looking at the locked test. The correct model-risk response is to collect more validation evidence, rerun out-of-fold comparison, review calibration, and document the rank-order instability.
+
 ## Evidence
 
 - Application model: locked-test AUC 0.793, Gini 0.585, KS 0.507.
 - Uncertainty: AUC 95% bootstrap interval 0.718-0.860.
+- Reject inference: approved-only bad rate 11.1% versus 30.8% PD-parcelled through-the-door bad rate and 30.0% hidden-label backtest bad rate.
+- Challenger monitoring: five open alerts covering challenger AUC/Brier/cost outperformance, OOF/locked-test rank instability, and champion calibration slope review.
 - Portfolio: 3,000 accounts and 105,520 account-month records.
 - Monitoring: 2.87% 30+ DPD and 1.72% 90+ DPD balance rates in the latest month.
 - Stress: expected loss increases from AUD 232.8k to AUD 520.7k in the severe scenario.
@@ -44,7 +55,7 @@ No. It is an interview-ready analytical approximation. The point is to show the 
 
 ## Resume Bullet
 
-Built a governed credit-risk modelling and portfolio-monitoring platform in Python, SQL, and Streamlit, selecting a calibrated PD model through five-fold out-of-fold validation (locked-test AUC 0.793; 95% CI 0.718-0.860) and analysing 105,520 synthetic account-month records across vintage, roll-rate, PSI, IFRS 9-style ECL staging, and PD/LGD/EAD stress scenarios.
+Built a governed credit-risk modelling and portfolio-monitoring platform in Python, SQL, and Streamlit, selecting a calibrated PD model through five-fold out-of-fold validation (locked-test AUC 0.793; 95% CI 0.718-0.860) and analysing reject inference, challenger alerts, 105,520 synthetic account-month records, vintage, roll-rate, PSI, IFRS 9-style ECL staging, and PD/LGD/EAD stress scenarios.
 
 ## Boundaries
 

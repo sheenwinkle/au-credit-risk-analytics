@@ -39,6 +39,7 @@ from credit_risk_au.modeling import (
     build_main_model,
     out_of_fold_probabilities,
 )
+from credit_risk_au.monitoring import challenger_monitoring, reject_inference_analysis
 from credit_risk_au.plots import save_eda_figures, save_model_figures
 
 
@@ -132,6 +133,12 @@ def train_pipeline(source: str = "openml") -> dict:
             for name, result in selection_results.items()
         ]
     )
+    reject_strategy, reject_by_decile = reject_inference_analysis(scored)
+    challenger_summary, monitoring_alerts, monitoring_summary = challenger_monitoring(
+        comparison,
+        test_results,
+        champion_name,
+    )
 
     save_eda_figures(df, TARGET, FIGURES_DIR)
     save_model_figures(y_test, champion_test_pd, FIGURES_DIR)
@@ -149,12 +156,22 @@ def train_pipeline(source: str = "openml") -> dict:
     fairness_path = REPORTS_DIR / "fairness_audit.csv"
     registry_path = REPORTS_DIR / "model_registry.json"
     governance_path = REPORTS_DIR / "model_governance_report.md"
+    reject_strategy_path = REPORTS_DIR / "reject_inference_strategy.csv"
+    reject_decile_path = REPORTS_DIR / "reject_inference_by_decile.csv"
+    challenger_path = REPORTS_DIR / "challenger_monitoring.csv"
+    monitoring_alerts_path = REPORTS_DIR / "model_monitoring_alerts.csv"
+    monitoring_summary_path = REPORTS_DIR / "model_monitoring_summary.json"
 
     scored.to_csv(scored_path, index=False)
     gains.to_csv(gains_path, index=False)
     importance.to_csv(importance_path, index=False)
     logistic_effects.to_csv(effects_path, index=False)
     comparison.to_csv(comparison_path, index=False)
+    reject_strategy.to_csv(reject_strategy_path, index=False)
+    reject_by_decile.to_csv(reject_decile_path, index=False)
+    challenger_summary.to_csv(challenger_path, index=False)
+    monitoring_alerts.to_csv(monitoring_alerts_path, index=False)
+    save_json(monitoring_summary, monitoring_summary_path)
     threshold_strategy.to_csv(threshold_path, index=False)
     save_json(confidence_intervals, intervals_path)
     joblib.dump(champion_model, model_path)
@@ -175,7 +192,16 @@ def train_pipeline(source: str = "openml") -> dict:
         champion_threshold,
     )
     write_governance_report(governance_path, registry, fairness, confidence_intervals)
-    write_sqlite_demo(df, scored, gains, db_path)
+    write_sqlite_demo(
+        df,
+        scored,
+        gains,
+        db_path,
+        reject_strategy,
+        reject_by_decile,
+        challenger_summary,
+        monitoring_alerts,
+    )
 
     payload = {
         "run_timestamp_utc": datetime.now(timezone.utc).isoformat(),
@@ -214,6 +240,11 @@ def train_pipeline(source: str = "openml") -> dict:
             "fairness_audit": str(fairness_path),
             "model_registry": str(registry_path),
             "governance_report": str(governance_path),
+            "reject_inference_strategy": str(reject_strategy_path),
+            "reject_inference_by_decile": str(reject_decile_path),
+            "challenger_monitoring": str(challenger_path),
+            "model_monitoring_alerts": str(monitoring_alerts_path),
+            "model_monitoring_summary": str(monitoring_summary_path),
         },
     }
     save_json(payload, REPORTS_DIR / "metrics.json")

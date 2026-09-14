@@ -1,0 +1,3 @@
+model,role,selected_champion,oof_roc_auc,test_roc_auc,test_brier_score,test_business_cost_per_application,delta_test_auc_vs_champion,delta_test_brier_vs_champion,delta_test_cost_vs_champion,calibration_slope,calibration_intercept
+logistic_regression,challenger,False,0.7696949404761904,0.8040476190476191,0.15497100880543452,0.575,0.011428571428571566,-0.005336392600366974,-0.0050000000000000044,0.8640057529909172,-0.1597982483781977
+calibrated_gradient_boosting,champion,True,0.789486607142857,0.7926190476190476,0.1603074014058015,0.58,0.0,0.0,0.0,1.2481450620927246,0.08571646500306121

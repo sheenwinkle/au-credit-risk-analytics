@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.0 - Reject inference and challenger monitoring
+
+- Added reject-inference sensitivity analysis comparing approved-only monitoring, PD parceling, and hidden-label backtesting on the public demo sample.
+- Added challenger monitoring outputs and alerts for locked-test rank-order instability, challenger AUC/Brier/cost improvements, and champion calibration slope review.
+- Added a Policy monitoring dashboard tab, PostgreSQL-ready views/queries, SQLite demo tables, tests, README updates, and final interview-walkthrough updates.
+
 ## 0.8.1 - Interview walkthrough and project value
 
 - Added an interviewer-ready walkthrough covering the 30-second pitch, live GitHub demo path, personal contribution, quantified outputs, defensible claim boundaries, common critique responses, and project limitations.

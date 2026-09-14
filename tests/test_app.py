@@ -14,5 +14,6 @@ def test_dashboard_loads_checked_report_artifacts():
         "Portfolio performance",
         "IFRS 9 provisioning",
         "Model validation",
+        "Policy monitoring",
         "Governance",
     ]

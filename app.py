@@ -38,6 +38,13 @@ def load_reports() -> dict:
             parse_dates=["reporting_month"],
         ),
         "comparison": pd.read_csv(REPORTS / "model_comparison.csv"),
+        "reject_strategy": pd.read_csv(REPORTS / "reject_inference_strategy.csv"),
+        "reject_decile": pd.read_csv(REPORTS / "reject_inference_by_decile.csv"),
+        "challenger": pd.read_csv(REPORTS / "challenger_monitoring.csv"),
+        "monitoring_alerts": pd.read_csv(REPORTS / "model_monitoring_alerts.csv"),
+        "monitoring_summary": json.loads(
+            (REPORTS / "model_monitoring_summary.json").read_text(encoding="utf-8")
+        ),
         "gains": pd.read_csv(REPORTS / "gains_table.csv"),
         "fairness": pd.read_csv(REPORTS / "fairness_audit.csv"),
         "reasons": pd.read_csv(REPORTS / "local_reason_codes.csv"),
@@ -87,12 +94,13 @@ with st.sidebar:
     )
     st.caption("Public RBA/ABS macro series with synthetic account performance")
 
-overview_tab, portfolio_tab, provision_tab, model_tab, governance_tab = st.tabs(
+overview_tab, portfolio_tab, provision_tab, model_tab, monitoring_tab, governance_tab = st.tabs(
     [
         "Executive view",
         "Portfolio performance",
         "IFRS 9 provisioning",
         "Model validation",
+        "Policy monitoring",
         "Governance",
     ]
 )
@@ -318,6 +326,66 @@ with model_tab:
     gains_fig.update_yaxes(tickformat=".0%")
     gains_fig.update_layout(height=390, coloraxis_colorbar_title="Average PD")
     st.plotly_chart(gains_fig, width="stretch")
+
+with monitoring_tab:
+    reject_strategy = data["reject_strategy"]
+    reject_decile = data["reject_decile"]
+    challenger = data["challenger"]
+    alerts = data["monitoring_alerts"]
+    monitoring_summary = data["monitoring_summary"]
+    approved_only = reject_strategy[
+        reject_strategy["strategy"] == "approved_only_observed"
+    ].iloc[0]
+    parceling = reject_strategy[reject_strategy["strategy"] == "pd_parceling"].iloc[0]
+
+    col1, col2, col3, col4 = st.columns(4)
+    col1.metric("Approved-only bad rate", f"{approved_only['estimated_bad_rate']:.1%}")
+    col2.metric("PD-parcelled TTD bad rate", f"{parceling['estimated_bad_rate']:.1%}")
+    col3.metric("Open model alerts", f"{monitoring_summary['open_alerts']}")
+    col4.metric(
+        "Best locked-test AUC",
+        monitoring_summary["best_locked_test_auc_model"].replace("_", " ").title(),
+    )
+
+    reject_chart = px.line(
+        reject_decile,
+        x="risk_decile",
+        y=[
+            "avg_pd",
+            "observed_bad_rate",
+            "pd_parcelled_declined_bad_rate",
+            "hidden_declined_bad_rate",
+        ],
+        markers=True,
+        title="Reject inference sensitivity by risk decile",
+        labels={"risk_decile": "Risk decile", "value": "Rate", "variable": "Measure"},
+    )
+    reject_chart.update_yaxes(tickformat=".0%")
+    reject_chart.update_layout(height=430)
+    st.plotly_chart(reject_chart, width="stretch")
+
+    challenger_chart = px.bar(
+        challenger,
+        x="model",
+        y="delta_test_auc_vs_champion",
+        color="role",
+        color_discrete_map={"champion": GREEN, "challenger": AMBER},
+        title="Locked-test AUC delta versus selected champion",
+        labels={"model": "Model", "delta_test_auc_vs_champion": "AUC delta"},
+    )
+    challenger_chart.update_layout(height=360)
+    st.plotly_chart(challenger_chart, width="stretch")
+
+    st.dataframe(
+        alerts,
+        width="stretch",
+        hide_index=True,
+        column_config={
+            "delta_vs_champion": st.column_config.NumberColumn(
+                "Delta vs champion", format="%.4f"
+            ),
+        },
+    )
 
 with governance_tab:
     registry = data["registry"]

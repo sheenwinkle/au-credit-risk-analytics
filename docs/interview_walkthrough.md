@@ -4,7 +4,7 @@ This guide is written for live interviews, recruiter screens, and GitHub reviews
 
 ## 30-second Pitch
 
-I built an end-to-end Australian credit risk analytics project that connects application PD modelling, portfolio monitoring, stress testing, and IFRS 9-style ECL provisioning. The project uses Python, SQL, Streamlit, Docker, and CI to show the full workflow a bank or FinTech risk analyst would be expected to understand: model development, validation, score monitoring, vintage and roll-rate analysis, expected loss, provisioning, documentation, and governance controls. The latest run covers 3,000 synthetic Australian-labelled accounts and 105,520 account-month observations, with reproducible outputs and a dashboard that can be reviewed locally or from GitHub.
+I built an end-to-end Australian credit risk analytics project that connects application PD modelling, reject-inference sensitivity, challenger monitoring, portfolio monitoring, stress testing, and IFRS 9-style ECL provisioning. The project uses Python, SQL, Streamlit, Docker, and CI to show the workflow a bank or FinTech risk analyst would be expected to understand: model development, validation, score monitoring, approved-only bias, challenger alerts, vintage and roll-rate analysis, expected loss, provisioning, documentation, and governance controls. The latest run covers 3,000 synthetic Australian-labelled accounts and 105,520 account-month observations, with reproducible outputs and a dashboard that can be reviewed locally or from GitHub.
 
 ## GitHub Live Demo Path
 
@@ -17,16 +17,16 @@ Use this order in a live screen share:
 2. Open `app.py` or launch the dashboard
    - Local Docker path: `docker compose up --build --detach`
    - Local URL: `http://localhost:8505/` when using the VS Code Docker task in this workspace.
-   - Walk through: Executive view -> Portfolio performance -> IFRS 9 provisioning -> Model validation -> Governance.
+   - Walk through: Executive view -> Portfolio performance -> IFRS 9 provisioning -> Model validation -> Policy monitoring -> Governance.
 
 3. Open `reports/portfolio_summary.json`
-   - Show the quantified portfolio outputs: exposure, arrears, stress loss, PSI, and ECL provision.
+   - Show the quantified portfolio outputs: exposure, arrears, stress loss, PSI, ECL provision, reject inference, and monitoring-alert summary.
 
 4. Open `src/credit_risk_au/analytics.py`
    - Show that the portfolio metrics, roll rates, stress scenarios, and ECL staging are implemented as reusable Python functions rather than manually created slides.
 
 5. Open `sql/02_monitoring_views.sql`
-   - Show PostgreSQL-ready reporting views for score monitoring, validation lift, arrears, vintage performance, roll rates, and IFRS 9-style provision summaries.
+   - Show PostgreSQL-ready reporting views for score monitoring, validation lift, reject inference, model alerts, arrears, vintage performance, roll rates, and IFRS 9-style provision summaries.
 
 6. Open `tests/`
    - Show that modelling, governance, portfolio analytics, macro data, app loading, and ECL staging are covered by automated tests.
@@ -40,7 +40,8 @@ This project demonstrates that I can take a vague risk-analytics business proble
 
 - Framing the lending-risk problem for Australian banking and FinTech roles.
 - Building a Python package with clean data, feature, modelling, evaluation, explainability, portfolio, macro, governance, and analytics modules.
-- Implementing baseline and challenger credit-risk models with out-of-fold selection, locked-test evaluation, calibration, thresholding, and bootstrap confidence intervals.
+- Implementing baseline and challenger credit-risk models with out-of-fold selection, locked-test evaluation, calibration, thresholding, bootstrap confidence intervals, and challenger-alert governance.
+- Adding reject-inference sensitivity analysis to show how approved-only performance monitoring can understate through-the-door application risk.
 - Designing a monthly account-performance mart with arrears, roll-rate, vintage, write-off, recovery, PD, LGD, EAD, expected-loss, and stress-scenario fields.
 - Adding IFRS 9-style Stage 1/2/3 ECL provisioning analytics and explaining the limitations clearly.
 - Creating PostgreSQL-ready schema, views, and analysis queries.
@@ -64,15 +65,21 @@ Use these numbers when explaining value:
 | Population Stability Index | 2.404 |
 | IFRS 9-style total ECL provision | AUD 291.8k |
 | Stage 3 provision contribution | 21.5% of provision from 1.7% of exposure |
+| Approved-only observed bad rate | 11.1% |
+| PD-parcelled through-the-door bad rate | 30.8% |
+| Hidden-label backtest bad rate | 30.0% |
+| Open model monitoring alerts | 5 |
+| Challenger locked-test AUC delta | +0.011 versus champion |
 | Locked-test AUC | 0.793 |
 | AUC bootstrap interval | 0.718-0.860 |
-| Automated tests | 10 passing locally in the latest run |
+| Automated tests | 12 passing locally in the latest run |
 
 ## Value to My Resume
 
 This project supports applications for risk analyst, credit risk analyst, model risk analyst, FinTech analyst, and junior data scientist roles because it shows more than model training. It demonstrates:
 
 - Credit-risk domain literacy: PD, bad rate, approval threshold, deciles, Gini, KS, calibration, vintage curves, roll rates, PSI, LGD, EAD, expected loss, staging, and coverage ratio.
+- Policy-monitoring literacy: approved-only bias, reject inference, PD parceling, hidden-label backtesting, challenger review alerts, and champion replacement discipline.
 - Practical engineering: package structure, tests, CI, Docker, VS Code workspace, SQL assets, reproducible commands, and public documentation.
 - Model-risk judgement: champion selection before locked-test evaluation, uncertainty intervals, governance notes, use restrictions, and honest limitations.
 - Business communication: dashboard, executive metrics, interview guide, and defensible resume bullets.
@@ -86,6 +93,8 @@ Use this as a boundary between strong claims and overclaims.
 | I built a reproducible public credit-risk analytics project. | I built a production bank lending system. |
 | I used public credit data and synthetic Australian-labelled account performance data. | I used real Australian bank customer data. |
 | I demonstrated the workflow for PD modelling, monitoring, stress testing, and ECL-style provisioning. | I created a statutory IFRS 9 impairment model. |
+| I showed reject-inference sensitivity using approved-only, PD parceling, and hidden-label backtesting on public demo data. | I recovered true rejected-customer outcomes for a real lender. |
+| I flagged challenger outperformance for review without replacing the champion post-hoc. | I proved the challenger should immediately replace the champion. |
 | The model achieved locked-test AUC 0.793 on the public demo dataset. | The model will achieve this performance on a lender's private portfolio. |
 | The severe scenario increases expected loss by 123.6% under disclosed assumptions. | I forecasted future Australian credit losses. |
 | The high PSI is a monitoring alert requiring decomposition. | The high PSI proves the model has failed. |
@@ -100,6 +109,14 @@ Public credit datasets rarely include monthly repayment behaviour, arrears migra
 ### "Why not use only the best locked-test model?"
 
 The champion was selected using development out-of-fold results before the locked test was viewed. Changing the champion after seeing the locked test would be test-set leakage. I kept the original champion to show model-risk discipline rather than chasing the most flattering test number.
+
+### "What does reject inference add?"
+
+It shows why approved-book monitoring can understate application risk. In the latest run, approved-only observed bad rate is 11.1%, while PD parceling estimates through-the-door bad rate at 30.8%; the demo hidden-label backtest is 30.0%. In production, rejected outcomes would not normally be known, so this is a sensitivity and governance exercise, not a claim that I can observe rejected-account defaults.
+
+### "Why are there five model alerts?"
+
+The alerts are a feature, not a failure. Logistic regression performs slightly better on locked-test AUC, Brier score, and business cost, and the champion's calibration slope needs review. The model-risk decision is to document those alerts, keep the original OOF-selected champion, and require more validation evidence before replacement.
 
 ### "Is the IFRS 9 layer compliant?"
 
@@ -121,7 +138,9 @@ I would replace synthetic performance with approved internal account data, valid
 - Stress scenarios use transparent multipliers, not official forecasts.
 - The dashboard is a demonstration control room, not an authenticated production application.
 - Fairness and reason-code outputs are analytical diagnostics, not legal adverse-action notices.
-- The project does not yet include reject inference, challenger drift alerts, or scheduled model monitoring.
+- Reject inference uses public demo labels for backtesting; real rejected-applicant inference would need approved bureau/performance data and policy sign-off.
+- Challenger alerts identify review actions; they are not automatic champion-replacement rules.
+- The project does not yet include scheduled production monitoring or authenticated workflow approvals.
 
 ## Five-minute Interview Flow
 
@@ -130,7 +149,8 @@ I would replace synthetic performance with approved internal account data, valid
 3. Model: "Baseline logistic regression and calibrated gradient boosting, selected through out-of-fold validation."
 4. Validation: "Locked-test AUC 0.793, bootstrap uncertainty, calibration, threshold cost, gains table."
 5. Portfolio: "105,520 account-months with arrears, vintage, roll rates, PSI, stress expected loss."
-6. Provisioning: "Stage 1/2/3 ECL-style provision, AUD 291.8k total provision, Stage 3 concentration visible."
-7. Engineering: "SQL views, Streamlit dashboard, Docker deployment, tests, CI, and versioned GitHub history."
-8. Boundary: "It is a public demonstration project, not a claim of production deployment or statutory compliance."
-
+6. Policy monitoring: "Approved-only bad rate is 11.1%; PD parceling estimates 30.8% through-the-door risk, close to the 30.0% hidden-label backtest."
+7. Challenger alerts: "Logistic regression beats the champion on locked-test AUC by 0.011, so I flag review without post-hoc replacement."
+8. Provisioning: "Stage 1/2/3 ECL-style provision, AUD 291.8k total provision, Stage 3 concentration visible."
+9. Engineering: "SQL views, Streamlit dashboard, Docker deployment, tests, CI, and versioned GitHub history."
+10. Boundary: "It is a public demonstration project, not a claim of production deployment or statutory compliance."

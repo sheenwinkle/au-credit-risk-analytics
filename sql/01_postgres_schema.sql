@@ -28,6 +28,33 @@ CREATE TABLE IF NOT EXISTS credit_risk.validation_gains (
     PRIMARY KEY (model_version, risk_decile)
 );
 
+CREATE TABLE IF NOT EXISTS credit_risk.reject_inference_by_decile (
+    risk_decile INTEGER PRIMARY KEY CHECK (risk_decile BETWEEN 1 AND 10),
+    applications INTEGER NOT NULL,
+    approved INTEGER NOT NULL,
+    declined INTEGER NOT NULL,
+    approval_rate NUMERIC(10, 8) NOT NULL,
+    avg_pd NUMERIC(10, 8) NOT NULL,
+    observed_bad_rate NUMERIC(10, 8) NOT NULL,
+    approved_observed_bad_rate NUMERIC(10, 8) NOT NULL,
+    pd_parcelled_declined_bad_rate NUMERIC(10, 8),
+    hidden_declined_bad_rate NUMERIC(10, 8),
+    expected_declined_bads NUMERIC(14, 6) NOT NULL,
+    hidden_declined_bads NUMERIC(14, 6) NOT NULL,
+    parceling_error_bads NUMERIC(14, 6) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS credit_risk.model_monitoring_alerts (
+    alert_id BIGSERIAL PRIMARY KEY,
+    alert TEXT NOT NULL,
+    model TEXT NOT NULL,
+    severity TEXT NOT NULL CHECK (severity IN ('watch', 'review')),
+    measure TEXT NOT NULL,
+    delta_vs_champion NUMERIC(12, 8) NOT NULL,
+    recommended_action TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 CREATE TABLE IF NOT EXISTS credit_risk.portfolio_accounts (
     account_id TEXT PRIMARY KEY,
     origination_month DATE NOT NULL,

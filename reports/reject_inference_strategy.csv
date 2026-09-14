@@ -1,0 +1,4 @@
+strategy,population,applications,estimated_bads,estimated_bad_rate,hidden_validation_bad_rate,use_case,limitation
+approved_only_observed,approved_accounts_only,72,8.0,0.1111111111111111,0.1111111111111111,Observed book monitoring after accept/decline policy.,Ignores rejected applicants and can understate through-the-door risk.
+pd_parceling,through_the_door_applications,200,61.614375506950225,0.3080718775347511,0.3,Sensitivity estimate for rejected applicants using model PDs.,Depends on calibration and does not replace observed rejected outcomes.
+hidden_outcome_backtest,through_the_door_applications,200,60.0,0.3,0.3,Demo-only validation because public data contains all labels.,Unavailable in real rejected populations without later performance data.

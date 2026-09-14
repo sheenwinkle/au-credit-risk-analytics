@@ -27,6 +27,30 @@ SELECT
     ROUND(lift_vs_portfolio::numeric, 2) AS lift_vs_portfolio
 FROM credit_risk.v_validation_lift;
 
+-- Reject inference sensitivity by score band.
+SELECT
+    risk_decile,
+    applications,
+    approved,
+    declined,
+    ROUND(approval_rate::numeric, 4) AS approval_rate,
+    ROUND(avg_pd::numeric, 4) AS avg_pd,
+    ROUND(approved_observed_bad_rate::numeric, 4) AS approved_observed_bad_rate,
+    ROUND(pd_parcelled_declined_bad_rate::numeric, 4) AS pd_parcelled_declined_bad_rate,
+    ROUND(parceling_error_bads::numeric, 2) AS parceling_error_bads
+FROM credit_risk.v_reject_inference_summary
+ORDER BY risk_decile;
+
+-- Open challenger and model monitoring alerts.
+SELECT
+    severity,
+    alert,
+    model,
+    measure,
+    ROUND(delta_vs_champion::numeric, 4) AS delta_vs_champion,
+    recommended_action
+FROM credit_risk.v_open_model_monitoring_alerts;
+
 -- Latest portfolio arrears, losses and expected loss.
 SELECT *
 FROM credit_risk.v_monthly_portfolio_risk
