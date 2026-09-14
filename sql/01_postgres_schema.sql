@@ -66,7 +66,30 @@ CREATE TABLE IF NOT EXISTS credit_risk.macro_economic (
     personal_credit_growth_yoy_pct NUMERIC(8, 4)
 );
 
+CREATE TABLE IF NOT EXISTS credit_risk.ifrs9_ecl_account_snapshot (
+    account_id TEXT NOT NULL REFERENCES credit_risk.portfolio_accounts(account_id),
+    reporting_month DATE NOT NULL,
+    product_type TEXT NOT NULL,
+    state CHAR(3) NOT NULL,
+    risk_band CHAR(1) NOT NULL,
+    status TEXT NOT NULL,
+    days_past_due INTEGER NOT NULL,
+    ead NUMERIC(14, 2) NOT NULL,
+    original_pd NUMERIC(10, 8) NOT NULL,
+    stressed_pd NUMERIC(10, 8) NOT NULL,
+    pd_uplift NUMERIC(12, 6) NOT NULL,
+    lifetime_pd NUMERIC(10, 8) NOT NULL,
+    lgd NUMERIC(10, 8) NOT NULL,
+    ifrs9_stage TEXT NOT NULL CHECK (ifrs9_stage IN ('Stage 1', 'Stage 2', 'Stage 3')),
+    stage_trigger TEXT NOT NULL,
+    ecl_provision NUMERIC(14, 2) NOT NULL,
+    coverage_ratio NUMERIC(10, 8) NOT NULL,
+    PRIMARY KEY (account_id, reporting_month)
+);
+
 CREATE INDEX IF NOT EXISTS idx_monthly_performance_month
     ON credit_risk.monthly_performance(reporting_month);
 CREATE INDEX IF NOT EXISTS idx_monthly_performance_status
     ON credit_risk.monthly_performance(status);
+CREATE INDEX IF NOT EXISTS idx_ifrs9_stage_snapshot_stage
+    ON credit_risk.ifrs9_ecl_account_snapshot(ifrs9_stage);

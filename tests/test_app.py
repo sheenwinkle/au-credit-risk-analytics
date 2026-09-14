@@ -9,4 +9,10 @@ def test_dashboard_loads_checked_report_artifacts():
 
     assert not app.exception
     assert app.title[0].value == "Credit Risk Control Room"
-    assert len(app.tabs) == 4
+    assert [tab.label for tab in app.tabs] == [
+        "Executive view",
+        "Portfolio performance",
+        "IFRS 9 provisioning",
+        "Model validation",
+        "Governance",
+    ]

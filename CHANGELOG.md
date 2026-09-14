@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.0 - IFRS 9 ECL provisioning analytics
+
+- Added IFRS 9-style Stage 1/2/3 account staging, provision, coverage-ratio, and monthly movement analytics.
+- Added provisioning outputs to the Streamlit control room, generated reports, SQLite demo database, and PostgreSQL-ready schema/views/queries.
+- Added regression tests covering ECL stage rollups, provision totals, movement shares, and coverage-ratio bounds.
+
 ## 0.7.0 - VS Code local workspace
 
 - Added checked-in VS Code settings, recommended extensions, launch configurations, and tasks.

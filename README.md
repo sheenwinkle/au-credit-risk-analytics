@@ -4,7 +4,7 @@
 
 Credit risk modelling and portfolio analytics project built for Australian banking, FinTech, risk analyst, credit risk, and model risk roles.
 
-The project estimates applicant probability of default, chooses a cost-sensitive credit decision threshold, validates rank ordering and calibration, produces a score-band monitoring table, and includes PostgreSQL-ready SQL assets for risk reporting.
+The project estimates applicant probability of default, chooses a cost-sensitive credit decision threshold, validates rank ordering and calibration, produces score-band monitoring, builds a monthly account-performance mart, and adds IFRS 9-style expected-credit-loss provisioning analytics with PostgreSQL-ready reporting assets.
 
 ## Business Problem
 
@@ -15,7 +15,8 @@ Australian lenders need to approve profitable borrowers while meeting responsibl
 3. Train an interpretable baseline and a stronger challenger model.
 4. Select a threshold that treats approved bad accounts as more costly than declined good accounts.
 5. Validate discrimination, calibration, bad-rate lift, approval rate, and score-band stability.
-6. Export scored applications and SQL-ready reporting tables.
+6. Monitor monthly arrears, roll rates, vintage defaults, stress expected loss, and Stage 1/2/3 provision coverage.
+7. Export scored applications, portfolio analytics, and SQL-ready reporting tables.
 
 ## Data
 
@@ -35,6 +36,7 @@ Latest generated portfolio profile:
 - 105,520 account-month performance records across 60 reporting months.
 - 231 simulated defaults with balances, write-offs, recoveries, PD, LGD, EAD, and expected loss.
 - 318 months of official macro history available for scenario joins.
+- IFRS 9-style Stage 1/2/3 provision outputs at account, product, risk-band, and monthly levels.
 
 ## Project Structure
 
@@ -93,6 +95,7 @@ Validation:
 - Five-fold out-of-fold model selection on the development sample.
 - Locked 20% test sample used only after the champion and threshold are frozen.
 - Bootstrap 95% confidence intervals to show sampling uncertainty.
+- IFRS 9-style ECL staging using DPD, default status, PD uplift, lifetime PD, LGD, and EAD.
 
 ## Latest Reproducible Results
 
@@ -121,8 +124,13 @@ The latest deterministic portfolio run produces:
 | Severe expected loss | AUD 520.7k |
 | Severe vs base increase | 123.6% |
 | Population Stability Index | 2.404 |
+| IFRS 9-style ECL provision | AUD 291.8k |
+| Stage 2/3 exposure | AUD 214.6k |
+| Stage 3 coverage ratio | 48.7% |
 
 The high PSI is treated as a monitoring alert caused by macro-sensitive PD movement and portfolio composition change, not as a positive model-performance result. See [`docs/portfolio_methodology.md`](docs/portfolio_methodology.md) for definitions and limitations.
+
+The IFRS 9 layer is a transparent analytical approximation for portfolio demonstration. It is not a statutory impairment model, but it shows how PD, LGD, EAD, arrears, and significant risk deterioration can flow into provision monitoring.
 
 ## Quick Start
 
@@ -179,9 +187,18 @@ The portfolio command writes:
 - `data/processed/portfolio_monthly_performance.csv`
 - `reports/portfolio_data_profile.json`
 
-The analytics command writes portfolio risk outputs for monthly arrears, vintage curves, roll rates, population stability, and stress scenarios to `reports/portfolio/`, with a local SQLite review database and four presentation-ready figures.
+The analytics command writes portfolio risk outputs for monthly arrears, vintage curves, roll rates, population stability, stress scenarios, and IFRS 9-style provisioning to `reports/portfolio/`, with a local SQLite review database and six presentation-ready figures.
 
-The Streamlit control room presents executive portfolio KPIs, vintage and roll-rate analysis, model validation, stress scenarios, segment diagnostics, and individual PD reason codes from the checked report artifacts.
+The same command now also writes:
+
+- `reports/portfolio/ifrs9_ecl_account_snapshot.csv`
+- `reports/portfolio/ifrs9_ecl_stage_summary.csv`
+- `reports/portfolio/ifrs9_ecl_segment_summary.csv`
+- `reports/portfolio/ifrs9_ecl_monthly_movement.csv`
+- `reports/figures/portfolio_ifrs9_coverage.png`
+- `reports/figures/portfolio_ifrs9_provision_movement.png`
+
+The Streamlit control room presents executive portfolio KPIs, vintage and roll-rate analysis, IFRS 9-style provisioning, model validation, stress scenarios, segment diagnostics, and individual PD reason codes from the checked report artifacts.
 
 Docker dashboard:
 
@@ -222,6 +239,7 @@ This project is designed to show:
 - Python ML workflow with clean package structure.
 - Credit risk concepts: PD, bad rate, approval rate, cutoff selection, score deciles, Gini, KS, calibration.
 - Portfolio risk concepts: 30+/90+ DPD, vintage curves, roll and cure rates, write-offs, recoveries, PSI, PD/LGD/EAD expected loss, and scenario stress testing.
+- Provisioning concepts: Stage 1/2/3 classification, significant PD uplift, lifetime PD approximation, ECL provision, coverage ratio, and monthly provision movement.
 - Model risk mindset: out-of-fold baseline/challenger selection, locked test policy, calibration, bootstrap uncertainty, interpretability, threshold assumptions, and limitations.
 - Governance evidence: versioned model registry, artifact hash, local reason codes, segment fairness diagnostics, monitoring triggers, and explicit use restrictions.
 - SQL capability through schema design, monitoring views, and reusable analysis queries.
@@ -232,6 +250,7 @@ This project is designed to show:
 - Built an end-to-end credit risk analytics project in Python, selecting a calibrated gradient-boosting champion using five-fold out-of-fold validation and evaluating it once on a locked test set (AUC 0.793; 95% bootstrap CI 0.718-0.860).
 - Designed PostgreSQL-ready credit risk tables and monitoring views for scored applications, approval rate tracking, and model validation reporting.
 - Built a 105,520-row monthly account-performance mart and PostgreSQL monitoring layer covering vintage defaults, delinquency migration, portfolio arrears, and expected loss under three stress scenarios.
+- Added IFRS 9-style ECL staging and provision analytics across 1,675 active accounts, estimating AUD 291.8k total provision and showing Stage 3 accounts contribute 21.5% of provision from 1.7% of exposure.
 - Implemented reproducible data ingestion, feature preprocessing, cost-sensitive thresholding, model explainability, automated tests, and public GitHub documentation for banking/FinTech risk analyst roles.
 
 The concise one-bullet version and defensible interview answers are in [`docs/interview_guide.md`](docs/interview_guide.md). The full project history is recorded in [`CHANGELOG.md`](CHANGELOG.md).
@@ -241,5 +260,5 @@ The concise one-bullet version and defensible interview answers are in [`docs/in
 - Add an Australian macroeconomic overlay and monthly account-performance portfolio.
 - Add vintage, roll-rate, expected-loss, and population-stability monitoring.
 - Add a Streamlit dashboard for score-band monitoring and manual underwriting review.
-- Add reject inference and adverse-action reason-code analysis.
+- Add reject inference, adverse-action reason-code analysis, and challenger monitoring alerts.
 - Replace the demo dataset with an Australian lender-approved internal dataset if used in a private workplace setting.

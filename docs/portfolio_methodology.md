@@ -20,6 +20,25 @@ The demonstration uses:
 
 PD is adjusted with observed cash-rate and unemployment stress in the synthetic account generator. LGD is product-sensitive and EAD is the closing account balance. This is an analytical simplification and not an implementation of accounting impairment requirements.
 
+## IFRS 9-style ECL Staging
+
+The project adds a transparent provision-monitoring layer that maps active accounts into Stage 1, Stage 2, or Stage 3. It is designed to demonstrate banking risk analytics concepts, not to claim statutory IFRS 9 compliance.
+
+Stage rules:
+
+- Stage 1: performing accounts without material deterioration.
+- Stage 2: accounts with 30+ DPD or stressed PD at least 2.5 times original PD.
+- Stage 3: defaulted, credit-impaired, or 90+ DPD accounts.
+
+Provision logic:
+
+- Stage 1 uses 12-month stressed PD.
+- Stage 2 uses a simplified lifetime PD over remaining contractual term, capped at five years.
+- Stage 3 uses 100% PD.
+- ECL provision equals provision PD times LGD times EAD.
+
+Outputs include account-level staging, stage summary, product/risk-band provision contribution, monthly provision movement, SQLite tables, and PostgreSQL-ready views.
+
 ## Stress Scenarios
 
 | Scenario | PD multiplier | LGD uplift |
@@ -43,4 +62,7 @@ The PSI compares the first six and latest six reporting months using PD bands fi
 - Base expected loss: AUD 232,814.
 - Severe expected loss: AUD 520,680, or 123.6% above base.
 - PSI: 2.404, indicating a material shift in the synthetic monitored population.
-
+- IFRS 9-style total provision: AUD 291,774.
+- Stage 2/3 exposure: AUD 214,627.
+- Stage 3 coverage ratio: 48.7%.
+- Stage 3 accounts contribute 21.5% of provision from 1.7% of exposure.

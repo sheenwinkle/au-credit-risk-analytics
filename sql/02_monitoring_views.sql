@@ -66,3 +66,35 @@ SELECT
 FROM credit_risk.monthly_performance p
 JOIN credit_risk.portfolio_accounts a USING (account_id)
 GROUP BY DATE_TRUNC('quarter', a.origination_month), p.months_on_book;
+
+CREATE OR REPLACE VIEW credit_risk.v_ifrs9_ecl_stage_summary AS
+SELECT
+    reporting_month,
+    ifrs9_stage,
+    COUNT(DISTINCT account_id) AS accounts,
+    SUM(ead) AS exposure,
+    AVG(stressed_pd) AS average_pd,
+    AVG(lgd) AS average_lgd,
+    SUM(ecl_provision) AS ecl_provision,
+    SUM(ecl_provision) / NULLIF(SUM(ead), 0) AS coverage_ratio,
+    SUM(ead) / NULLIF(SUM(SUM(ead)) OVER (PARTITION BY reporting_month), 0)
+        AS exposure_share,
+    SUM(ecl_provision)
+        / NULLIF(SUM(SUM(ecl_provision)) OVER (PARTITION BY reporting_month), 0)
+        AS provision_share
+FROM credit_risk.ifrs9_ecl_account_snapshot
+GROUP BY reporting_month, ifrs9_stage;
+
+CREATE OR REPLACE VIEW credit_risk.v_ifrs9_ecl_segment_summary AS
+SELECT
+    reporting_month,
+    product_type,
+    risk_band,
+    ifrs9_stage,
+    COUNT(DISTINCT account_id) AS accounts,
+    SUM(ead) AS exposure,
+    AVG(stressed_pd) AS average_pd,
+    SUM(ecl_provision) AS ecl_provision,
+    SUM(ecl_provision) / NULLIF(SUM(ead), 0) AS coverage_ratio
+FROM credit_risk.ifrs9_ecl_account_snapshot
+GROUP BY reporting_month, product_type, risk_band, ifrs9_stage;

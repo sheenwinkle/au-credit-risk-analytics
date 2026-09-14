@@ -13,12 +13,27 @@
     "severe": 520680.06152832747
   },
   "severe_vs_base_el_increase": 1.2364634152440273,
+  "ifrs9_ecl_total_provision": 291774.31141465326,
+  "ifrs9_ecl_by_stage": {
+    "Stage 1": 223385.9715122486,
+    "Stage 2": 5571.29330240468,
+    "Stage 3": 62817.0466
+  },
+  "ifrs9_coverage_by_stage": {
+    "Stage 1": 0.030708303133873367,
+    "Stage 2": 0.0650747263163089,
+    "Stage 3": 0.4869040646154087
+  },
   "outputs": {
     "monthly_summary": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\portfolio\\monthly_summary.csv",
     "vintage_analysis": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\portfolio\\vintage_analysis.csv",
     "roll_rates": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\portfolio\\roll_rates.csv",
     "population_stability": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\portfolio\\population_stability.csv",
-    "stress_scenarios": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\portfolio\\stress_scenarios.csv"
+    "stress_scenarios": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\portfolio\\stress_scenarios.csv",
+    "ifrs9_ecl_account_snapshot": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\portfolio\\ifrs9_ecl_account_snapshot.csv",
+    "ifrs9_ecl_stage_summary": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\portfolio\\ifrs9_ecl_stage_summary.csv",
+    "ifrs9_ecl_segment_summary": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\portfolio\\ifrs9_ecl_segment_summary.csv",
+    "ifrs9_ecl_monthly_movement": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\reports\\portfolio\\ifrs9_ecl_monthly_movement.csv"
   },
   "sqlite_demo": "C:\\Users\\ZhuanZ.DESKTOP-LJJ6K3U\\Documents\\Codex\\2026-09-08\\referenced-chatgpt-conversation-this-is-an\\outputs\\au-credit-risk-analytics\\data\\processed\\portfolio_risk_demo.sqlite"
 }

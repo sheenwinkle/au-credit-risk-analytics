@@ -31,6 +31,12 @@ def load_reports() -> dict:
         "vintage": pd.read_csv(PORTFOLIO_REPORTS / "vintage_analysis.csv"),
         "roll_rates": pd.read_csv(PORTFOLIO_REPORTS / "roll_rates.csv"),
         "stress": pd.read_csv(PORTFOLIO_REPORTS / "stress_scenarios.csv"),
+        "ecl_stage": pd.read_csv(PORTFOLIO_REPORTS / "ifrs9_ecl_stage_summary.csv"),
+        "ecl_segment": pd.read_csv(PORTFOLIO_REPORTS / "ifrs9_ecl_segment_summary.csv"),
+        "ecl_movement": pd.read_csv(
+            PORTFOLIO_REPORTS / "ifrs9_ecl_monthly_movement.csv",
+            parse_dates=["reporting_month"],
+        ),
         "comparison": pd.read_csv(REPORTS / "model_comparison.csv"),
         "gains": pd.read_csv(REPORTS / "gains_table.csv"),
         "fairness": pd.read_csv(REPORTS / "fairness_audit.csv"),
@@ -81,8 +87,14 @@ with st.sidebar:
     )
     st.caption("Public RBA/ABS macro series with synthetic account performance")
 
-overview_tab, portfolio_tab, model_tab, governance_tab = st.tabs(
-    ["Executive view", "Portfolio performance", "Model validation", "Governance"]
+overview_tab, portfolio_tab, provision_tab, model_tab, governance_tab = st.tabs(
+    [
+        "Executive view",
+        "Portfolio performance",
+        "IFRS 9 provisioning",
+        "Model validation",
+        "Governance",
+    ]
 )
 
 with overview_tab:
@@ -94,6 +106,15 @@ with overview_tab:
         "Severe EL uplift",
         f"{portfolio['severe_vs_base_el_increase']:.1%}",
         delta_color="inverse",
+    )
+    ecl_stage = data["ecl_stage"]
+    stage_2_3 = ecl_stage[ecl_stage["ifrs9_stage"].isin(["Stage 2", "Stage 3"])]
+    ecl_col1, ecl_col2, ecl_col3 = st.columns(3)
+    ecl_col1.metric("IFRS 9 provision", money(portfolio["ifrs9_ecl_total_provision"]))
+    ecl_col2.metric("Stage 2/3 exposure", money(stage_2_3["exposure"].sum()))
+    ecl_col3.metric(
+        "Stage 3 coverage",
+        f"{portfolio['ifrs9_coverage_by_stage'].get('Stage 3', 0):.1%}",
     )
 
     monthly = data["monthly"]
@@ -119,7 +140,7 @@ with overview_tab:
     fig.update_yaxes(title_text="Exposure (AUD)", secondary_y=False)
     fig.update_yaxes(title_text="30+ DPD rate", tickformat=".1%", secondary_y=True)
     fig.update_layout(title="Exposure and delinquency", hovermode="x unified", height=430)
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     stress = data["stress"]
     if selected_product != "All products":
@@ -139,7 +160,7 @@ with overview_tab:
         labels={"scenario": "Scenario", "expected_loss": "Expected loss (AUD)"},
     )
     stress_fig.update_layout(showlegend=False, height=390)
-    st.plotly_chart(stress_fig, use_container_width=True)
+    st.plotly_chart(stress_fig, width="stretch")
 
 with portfolio_tab:
     left, right = st.columns([1.05, 0.95])
@@ -160,7 +181,7 @@ with portfolio_tab:
         )
         vintage_fig.update_yaxes(tickformat=".1%")
         vintage_fig.update_layout(height=470)
-        st.plotly_chart(vintage_fig, use_container_width=True)
+        st.plotly_chart(vintage_fig, width="stretch")
 
     with right:
         roll = data["roll_rates"].pivot(
@@ -179,11 +200,11 @@ with portfolio_tab:
             aspect="auto",
         )
         heatmap.update_layout(height=470, coloraxis_showscale=False)
-        st.plotly_chart(heatmap, use_container_width=True)
+        st.plotly_chart(heatmap, width="stretch")
 
     st.dataframe(
         monthly.sort_values("reporting_month", ascending=False).head(12),
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
         column_config={
             "reporting_month": st.column_config.DateColumn("Month"),
@@ -191,6 +212,66 @@ with portfolio_tab:
             "balance_30_plus_rate": st.column_config.NumberColumn("30+ DPD", format="percent"),
             "balance_90_plus_rate": st.column_config.NumberColumn("90+ DPD", format="percent"),
             "expected_loss_rate": st.column_config.NumberColumn("EL rate", format="percent"),
+        },
+    )
+
+with provision_tab:
+    ecl_stage = data["ecl_stage"]
+    ecl_segment = data["ecl_segment"]
+    ecl_movement = data["ecl_movement"]
+
+    col1, col2, col3, col4 = st.columns(4)
+    col1.metric("Total provision", money(portfolio["ifrs9_ecl_total_provision"]))
+    col2.metric(
+        "Stage 2 provision",
+        money(portfolio["ifrs9_ecl_by_stage"].get("Stage 2", 0)),
+    )
+    col3.metric(
+        "Stage 3 provision",
+        money(portfolio["ifrs9_ecl_by_stage"].get("Stage 3", 0)),
+    )
+    col4.metric(
+        "Stage 2/3 exposure share",
+        f"{ecl_stage[ecl_stage['ifrs9_stage'].isin(['Stage 2', 'Stage 3'])]['exposure_share'].sum():.1%}",
+    )
+
+    stage_chart = px.bar(
+        ecl_stage,
+        x="ifrs9_stage",
+        y="ecl_provision",
+        color="ifrs9_stage",
+        color_discrete_map={"Stage 1": GREEN, "Stage 2": AMBER, "Stage 3": RED},
+        title="ECL provision by IFRS 9 stage",
+        labels={"ifrs9_stage": "Stage", "ecl_provision": "ECL provision (AUD)"},
+    )
+    stage_chart.update_layout(showlegend=False, height=370)
+    st.plotly_chart(stage_chart, width="stretch")
+
+    movement_chart = px.area(
+        ecl_movement,
+        x="reporting_month",
+        y="ecl_provision",
+        color="ifrs9_stage",
+        color_discrete_map={"Stage 1": GREEN, "Stage 2": AMBER, "Stage 3": RED},
+        title="Monthly provision movement",
+        labels={
+            "reporting_month": "Reporting month",
+            "ecl_provision": "ECL provision (AUD)",
+            "ifrs9_stage": "Stage",
+        },
+    )
+    movement_chart.update_layout(height=410)
+    st.plotly_chart(movement_chart, width="stretch")
+
+    st.dataframe(
+        ecl_segment.sort_values("ecl_provision", ascending=False),
+        width="stretch",
+        hide_index=True,
+        column_config={
+            "exposure": st.column_config.NumberColumn("Exposure", format="dollar"),
+            "average_pd": st.column_config.NumberColumn("Average PD", format="percent"),
+            "ecl_provision": st.column_config.NumberColumn("Provision", format="dollar"),
+            "coverage_ratio": st.column_config.NumberColumn("Coverage", format="percent"),
         },
     )
 
@@ -223,7 +304,7 @@ with model_tab:
         labels={"model": "Model", "roc_auc": "ROC AUC", "sample": "Evaluation"},
     )
     model_fig.update_layout(height=410)
-    st.plotly_chart(model_fig, use_container_width=True)
+    st.plotly_chart(model_fig, width="stretch")
 
     gains_fig = px.bar(
         data["gains"],
@@ -236,7 +317,7 @@ with model_tab:
     )
     gains_fig.update_yaxes(tickformat=".0%")
     gains_fig.update_layout(height=390, coloraxis_colorbar_title="Average PD")
-    st.plotly_chart(gains_fig, use_container_width=True)
+    st.plotly_chart(gains_fig, width="stretch")
 
 with governance_tab:
     registry = data["registry"]
@@ -266,7 +347,7 @@ with governance_tab:
     )
     fairness_fig.update_yaxes(tickformat=".0%")
     fairness_fig.update_layout(height=390)
-    st.plotly_chart(fairness_fig, use_container_width=True)
+    st.plotly_chart(fairness_fig, width="stretch")
 
     reasons = data["reasons"]
     application = st.selectbox(
@@ -286,10 +367,9 @@ with governance_tab:
     )
     reason_fig.update_xaxes(tickformat=".1%")
     reason_fig.update_layout(height=360, showlegend=False)
-    st.plotly_chart(reason_fig, use_container_width=True)
+    st.plotly_chart(reason_fig, width="stretch")
 
     st.warning(
         "Demonstration model only. Segment diagnostics and local sensitivities are not "
         "production lending decisions or adverse-action notices."
     )
-

@@ -53,3 +53,29 @@ SELECT
 FROM credit_risk.v_vintage_performance
 WHERE months_on_book <= 24
 ORDER BY origination_vintage, months_on_book;
+
+-- IFRS 9-style ECL stage summary for provision monitoring.
+SELECT
+    reporting_month,
+    ifrs9_stage,
+    accounts,
+    ROUND(exposure::numeric, 2) AS exposure,
+    ROUND(ecl_provision::numeric, 2) AS ecl_provision,
+    ROUND(coverage_ratio::numeric, 4) AS coverage_ratio,
+    ROUND(provision_share::numeric, 4) AS provision_share
+FROM credit_risk.v_ifrs9_ecl_stage_summary
+ORDER BY reporting_month DESC, ifrs9_stage;
+
+-- Product and risk-band contributors to provision.
+SELECT
+    reporting_month,
+    product_type,
+    risk_band,
+    ifrs9_stage,
+    accounts,
+    ROUND(exposure::numeric, 2) AS exposure,
+    ROUND(ecl_provision::numeric, 2) AS ecl_provision,
+    ROUND(coverage_ratio::numeric, 4) AS coverage_ratio
+FROM credit_risk.v_ifrs9_ecl_segment_summary
+ORDER BY reporting_month DESC, ecl_provision DESC
+LIMIT 20;
